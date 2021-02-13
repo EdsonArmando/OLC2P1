@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Proyecto1_Compi2.Entorno
+namespace Proyecto1_Compi2.Entornos
 {
     class Entorno
     {

@@ -35,6 +35,7 @@ namespace Proyecto1_Compi2
         /// </summary>
         private void InitializeComponent()
         {
+            WindowState = FormWindowState.Maximized;
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,7 +45,8 @@ namespace Proyecto1_Compi2
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.richTextBox1.ForeColor = System.Drawing.Color.Black;
             this.richTextBox1.Location = new System.Drawing.Point(14, 14);
             this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.richTextBox1.Name = "richTextBox1";
@@ -115,6 +117,7 @@ namespace Proyecto1_Compi2
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
             salidaConsola.Size = new System.Drawing.Size(854, 150);
             salidaConsola.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             salidaConsola.ScrollToCaret();
@@ -140,6 +143,7 @@ namespace Proyecto1_Compi2
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Form1.salidaConsola.Clear();
             Sintactico analizador = new Sintactico();
             string textAnalizar = richTextBox1.Text;
             analizador.analizar(textAnalizar);

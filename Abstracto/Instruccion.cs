@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Abstracto
 {
-    interface Instruccion
+    abstract class Instruccion
     {
+        abstract public Retornar ejectuar(Entornos.Entorno ent);
     }
 }
