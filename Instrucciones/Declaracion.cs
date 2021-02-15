@@ -6,22 +6,29 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Declaracion : Abstracto.Instruccion
+    class Declaracion : Instruccion
     {
-        string nombreVariable;
-        Abstracto.Expresion valor;
-        Entornos.Simbolo.EnumTipoDato tipoVariable;
-        LinkedList<Declaracion> lista;
-        Instruccion llamadaFuncion;
-        public Declaracion(Simbolo.EnumTipoDato tipo, string nombre, Abstracto.Expresion expresion)
+        Simbolo.EnumTipoDato tipoVariable;
+        String nombreVariable;
+        Expresion expresion;
+        int fila, columna;
+
+        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna)
         {
             this.tipoVariable = tipo;
             this.nombreVariable = nombre;
-            this.valor = expresion;
+            this.expresion = expresion;
+            this.fila = fila;
+            this.columna = columna;
         }
-        public override Retornar ejectuar(Entornos.Entorno ent)
+        public Retornar Ejecutar(Entorno ent,String ambito)
         {
-            throw new NotImplementedException();
+            Expresion resultado = expresion.obtenerValor(ent); //Resuelvo la expresión que le quiero asignar a la variable
+            if (resultado != null)
+            {
+                ent.Insertar(this.nombreVariable, new Simbolo(this.tipoVariable, resultado.valor, nombreVariable,ambito)); // Guardo la variable
+            }
+            return new Retornar();
         }
     }
 }

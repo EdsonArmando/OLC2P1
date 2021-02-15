@@ -1,4 +1,6 @@
 ﻿using Irony.Parsing;
+using Proyecto1_Compi2.Entornos;
+using Proyecto1_Compi2.Expresiones;
 using Proyecto1_Compi2.Instrucciones;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ namespace Proyecto1_Compi2.Analizadores
     {
         public void analizar(String entrada)
         {
-            Console.WriteLine(entrada);
+            Singleton.getInstance().limpiarEntorno();
             Gramatica gramatica = new Gramatica();
             LanguageData lenguaje = new LanguageData(gramatica);
             Parser parser = new Parser(lenguaje);
@@ -21,23 +23,38 @@ namespace Proyecto1_Compi2.Analizadores
             {
                 for (int i = 0; i < arbol.ParserMessages.Count(); i++)
                 {
-                    Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString() + "\n");
+                    Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString()+ " Fila: " + arbol.ParserMessages.ElementAt(i).Location.Line
+                        + " Columna: " + arbol.ParserMessages.ElementAt(i).Location.Column
+                        + "\n");
                 }
                 return;
             }
             else
             {
                 Form1.salidaConsola.AppendText("Se analizo correctamente\n");
-                LinkedList<Abstracto.Instruccion> AST = instrucciones(raiz.ChildNodes.ElementAt(0));
+                LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
+                Entornos.Entorno ent = new Entornos.Entorno(null);
+                foreach (Abstracto.Instruccion ins in AST) {
+                    ins.Ejecutar(ent,"global");
+                }
             }
         }
         //Recorrer Raiz
-        private LinkedList<Abstracto.Instruccion> instrucciones(ParseTreeNode actual)
+        private LinkedList<Abstracto.Instruccion> Listainstrucciones(ParseTreeNode actual)
         {
             LinkedList<Abstracto.Instruccion> instrucciones = new LinkedList<Abstracto.Instruccion>();
             for (int i = 0; i < actual.ChildNodes.Count; i++)
             {
                 Abstracto.Instruccion nuevo = instruccion(actual.ChildNodes.ElementAt(i),"",null, instrucciones);
+            }
+            return instrucciones;
+        }
+        private LinkedList<Abstracto.Instruccion> Listainstrucciones2(ParseTreeNode actual)
+        {
+            LinkedList<Abstracto.Instruccion> instrucciones = new LinkedList<Abstracto.Instruccion>();
+            for (int i = 0; i < actual.ChildNodes.Count; i++)
+            {
+                Abstracto.Instruccion nuevo = instruccion(actual.ChildNodes.ElementAt(i), "", null, instrucciones);
             }
             return instrucciones;
         }
@@ -51,6 +68,7 @@ namespace Proyecto1_Compi2.Analizadores
 
             return null;
         }
+
         /*
        Funcion para logra desanidar las funciones
         */
@@ -69,11 +87,11 @@ namespace Proyecto1_Compi2.Analizadores
                     if (padre != "")
                     {
                         funcionHija = padre + "_" + funcion.ChildNodes.ElementAt(1).ToString().Split(' ')[0];
-                        Form1.salidaConsola.AppendText(funcionHija  +"\n");
+                        
                     }
                     else {
                         funcionHija = funcion.ChildNodes.ElementAt(1).ToString().Split(' ')[0];
-                        Form1.salidaConsola.AppendText(funcionHija+"\n");
+                        
                     }
 
                     /*
@@ -92,15 +110,163 @@ namespace Proyecto1_Compi2.Analizadores
                     else {
                         for (int i = 0; i < funcion.ChildNodes.ElementAt(5).ChildNodes.Count; i++)
                         {
-                            Abstracto.Instruccion nuevo = instruccion(funcion.ChildNodes.ElementAt(5).ChildNodes.ElementAt(i), funcionHija, ListaParametrosPadre,instrucciones);
+                            instruccion(funcion.ChildNodes.ElementAt(5).ChildNodes.ElementAt(i), funcionHija, ListaParametrosPadre,instrucciones);
                         }
                         temp = new Funcion(funcionHija, null, listInstr2(funcion.ChildNodes.ElementAt(7)), listInstr2(funcion.ChildNodes.ElementAt(5)));
                         instrucciones.AddLast(temp);
                         return temp;
                     }
+                case "procedure":
+                    ParseTreeNode procedure = actual.ChildNodes.ElementAt(0);
+                    String ProcedureHija;
+                    Procedure temp2;
+                    if (padre != "")
+                    {
+                        ProcedureHija = padre + "_" + procedure.ChildNodes.ElementAt(1).ToString().Split(' ')[0];               
+                    }
+                    else
+                    {
+                        ProcedureHija = procedure.ChildNodes.ElementAt(1).ToString().Split(' ')[0];
+                    }
+
+                    /*
+                        Procedure tiene 11 nodos en el nodo 8 se encuentran la funciones anidadas
+                     */
+                    if (procedure.ChildNodes.Count == 11)
+                    {
+                        for (int i = 0; i < procedure.ChildNodes.ElementAt(6).ChildNodes.Count; i++)
+                        {
+                            Abstracto.Instruccion nuevo = instruccion(procedure.ChildNodes.ElementAt(6).ChildNodes.ElementAt(i), ProcedureHija, procedure.ChildNodes.ElementAt(3), instrucciones);
+                        }
+                        temp2 = new Procedure(ProcedureHija, listaExpresiones(procedure.ChildNodes.ElementAt(3)), listInstr2(procedure.ChildNodes.ElementAt(8)), listInstr2(procedure.ChildNodes.ElementAt(6)),1,1);
+                        instrucciones.AddLast(temp2);
+                        return temp2;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < procedure.ChildNodes.ElementAt(3).ChildNodes.Count; i++)
+                        {
+                            if (procedure.ChildNodes.ElementAt(3).ChildNodes.ElementAt(i).ChildNodes.ElementAt(0).Term.Name != "declaracion") {
+                                Abstracto.Instruccion nuevo = instruccion(procedure.ChildNodes.ElementAt(3).ChildNodes.ElementAt(i), ProcedureHija, ListaParametrosPadre, instrucciones);
+                            }
+                        }
+                        temp2 = new Procedure(ProcedureHija, null, Listainstrucciones(procedure.ChildNodes.ElementAt(5)), Listainstrucciones2(procedure.ChildNodes.ElementAt(3)),1,1);
+                        instrucciones.AddLast(temp2);
+                        return temp2;
+                    }
+                case "writeln":
+                    instrucciones.AddLast(new Print(devListExpresiones(actual.ChildNodes.ElementAt(2)), 1, 1));
+                    return null;
+                case "declaracion":
+                    if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 3)
+                    {
+                        instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1));
+                    }
+                    else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 6) {
+                        instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), 1, 1));
+                    }
+                        return null;
+                case "llamadafuncion":
+                        instrucciones.AddLast(new LlamadaFuncion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)),1,1));
+                    return null;  
                 default:
                     return null;
             }
+        }
+        /*
+            Resolviendo expresiones Arimeticas
+        */
+        public Arimetica expresion_numerica(ParseTreeNode actual)
+            {
+            if (actual.ChildNodes.Count == 3)
+            {
+                string tokenOperador = actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0];
+                switch (tokenOperador)
+                {
+                    case "+":
+                        return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.SUMA);
+                    case "pow":
+                        return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.POTENCIA);
+                    case "-":
+                        return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.RESTA);
+                    case "*":
+                        return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.MULTIPLICACION);
+                    case "/":
+                        return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIVISION);
+                    default:
+                        return expresion_numerica(actual.ChildNodes.ElementAt(1));
+                }
+
+            }            
+            else if (actual.ChildNodes.Count == 2)
+            {
+                return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(1)), Arimetica.Tipo_operacion.NEGATIVO);
+            }
+            else {
+                BnfTerm tipo = actual.ChildNodes.ElementAt(0).Term;
+                if (tipo.ErrorAlias == "ID")
+                {
+                    string tokenValor = actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0];
+                    return new Arimetica(tokenValor, Arimetica.Tipo_operacion.IDENTIFICADOR);
+                }
+                else if (tipo.ErrorAlias == "cadena")
+                {
+                    String tokenValor = actual.ChildNodes.ElementAt(0).ToString();
+                    return new Arimetica(tokenValor.Remove(tokenValor.ToCharArray().Length - 9, 9), Arimetica.Tipo_operacion.CADENA);
+                }
+                else if (tipo.ErrorAlias == "cadena2")
+                {
+                    String tokenValor = actual.ChildNodes.ElementAt(0).ToString();
+                    return new Arimetica(tokenValor.Remove(tokenValor.ToCharArray().Length - 10, 10), Arimetica.Tipo_operacion.CADENA);
+                }
+                else {
+                    return new Arimetica(Double.Parse(actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0]));
+                }
+                
+            }
+        }
+        private Simbolo.EnumTipoDato devTipoDato(ParseTreeNode actual) { 
+            string valor = actual.ToString().Split(' ')[0];
+            switch (valor.ToLower()) {
+                case "integer":
+                    return Simbolo.EnumTipoDato.INT;
+                default:
+                    return Simbolo.EnumTipoDato.NULL;
+            }
+        }
+        /*
+            Devolviendo Lista de Expresiones
+        */
+        private LinkedList<Abstracto.Expresion> devListExpresiones(ParseTreeNode actual)
+        {
+            LinkedList<Abstracto.Expresion> ListaExpre = new LinkedList<Abstracto.Expresion>();
+            ParseTreeNode temp;
+            for (int i = 0; i < actual.ChildNodes.Count; i++)
+            {
+                temp = actual.ChildNodes.ElementAt(i);
+                BnfTerm tipo = temp.ChildNodes.ElementAt(0).Term;
+                if (tipo.ErrorAlias == "cadena")
+                {
+                    String tokenValor = temp.ChildNodes.ElementAt(0).ToString();
+                    ListaExpre.AddLast(new Expresiones.Literal(Entornos.Simbolo.EnumTipoDato.STRING, tokenValor.Remove(tokenValor.ToCharArray().Length - 9, 9)));
+                }
+                else if (tipo.ErrorAlias == "ID")
+                {
+                    if (temp.ChildNodes.ElementAt(0).ChildNodes.Count != 3)
+                    {
+                        ListaExpre.AddLast(new Expresiones.Id(temp.ChildNodes.ElementAt(0).ToString().Split(' ')[0]));
+                    }
+                }else if (tipo.ErrorAlias == "cadena2")
+                {
+                    String tokenValor = temp.ChildNodes.ElementAt(0).ToString();
+                    ListaExpre.AddLast(new Expresiones.Literal(Entornos.Simbolo.EnumTipoDato.STRING, tokenValor.Remove(tokenValor.ToCharArray().Length - 10, 10)));
+                }
+                else
+                {
+                    ListaExpre.AddLast(expresion_numerica(temp));
+                }
+            }
+            return ListaExpre;
         }
     }
 }

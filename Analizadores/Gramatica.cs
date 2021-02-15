@@ -26,6 +26,7 @@ namespace Proyecto1_Compi2.Analizadores
             var REVALUAR = ToTerm("evaluar");
             var TFUNCTION = ToTerm("function");
             var Twriteln = ToTerm("writeln");
+            var tProcedure = ToTerm("procedure");
             var TBEGIN = ToTerm("begin");
             var TVAR = ToTerm("var");
             var TEND = ToTerm("end");
@@ -40,10 +41,13 @@ namespace Proyecto1_Compi2.Analizadores
             var MENOS = ToTerm("-");
             var IGUAL = ToTerm("=");
             var POR = ToTerm("*");
+            var POW = ToTerm("^");
             var DIVIDIDO = ToTerm("/");
 
             RegisterOperators(1, MAS, MENOS);
-            RegisterOperators(2, POR, DIVIDIDO);
+            RegisterOperators(2, POR, DIVIDIDO, POW);
+            /*RegisterOperators(3, tMayorQ, tMenorQ);
+            RegisterOperators(4, tOr, tAnd, tXor, tDifQ, tPunto);*/
 
             #endregion
 
@@ -59,6 +63,7 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal expresion = new NonTerminal("expresion");
             NonTerminal DECLARACION = new NonTerminal("declaracion");
             NonTerminal FUNCION = new NonTerminal("funcion");
+            NonTerminal PROCEDURE = new NonTerminal("procedure");
             NonTerminal LLAMADAFUNCION = new NonTerminal("llamadaFuncion");
             #endregion
 
@@ -67,10 +72,23 @@ namespace Proyecto1_Compi2.Analizadores
 
             listInstr.Rule = MakePlusRule(listInstr, instruccion)
                              | Empty;
-
+            //Instrucciones que acepta el lenguaje
             instruccion.Rule = DECLARACION + PTCOMA
                                 | FUNCION
+                                | PROCEDURE
+                                | LLAMADAFUNCION + PTCOMA
+                                | Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
             ;
+            PROCEDURE.Rule = tProcedure + tId + PTCOMA + listInstr + TBEGIN + listInstr2 + TEND + PTCOMA
+                            | tProcedure + tId + PARIZQ + listParam + PARDER + PTCOMA + listInstr + TBEGIN + listInstr2 + TEND + PTCOMA
+                        ;
+            FUNCION.Rule = TFUNCTION + tId + PARIZQ + listParam + PARDER + PDOSPUNTOS + tId + PTCOMA
+                                + listInstr
+                                + TBEGIN + listInstr2 + TEND + PTCOMA
+                        | TFUNCTION + tId + PDOSPUNTOS + tId + PTCOMA
+                            + listInstr
+                            + TBEGIN + listInstr2 + TEND + PTCOMA
+                ;
             listFuncion.Rule = MakePlusRule(listFuncion, FUNCION);
             listInstr2.Rule = MakePlusRule(listInstr2, instruccion2)
                               | Empty;
@@ -80,28 +98,22 @@ namespace Proyecto1_Compi2.Analizadores
             listExpr.Rule = MakePlusRule(listExpr, COMA, expresion)
                          | Empty;
             listExpr.ErrorRule = SyntaxError + ",";
-            instruccion2.Rule = Twriteln + PARIZQ + expresion + PARDER + PTCOMA
-                                | Twriteln + PARIZQ + expresion + PARDER
-                                | tId + PDOSPUNTOS + IGUAL + listExpr + PTCOMA
+            //Instrucciones dentro de las funciones y Procedimientos
+            instruccion2.Rule = //Twriteln + PARIZQ + expresion + PARDER + PTCOMA
+                                 Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
+                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA
                                 | LLAMADAFUNCION + PTCOMA
             ;
             listFuncion.Rule = MakePlusRule(listFuncion, FUNCION);
-            FUNCION.Rule = TFUNCTION + tId + PARIZQ + listParam + PARDER + PDOSPUNTOS + tId + PTCOMA
-                                + listInstr
-                                + TBEGIN + listInstr2 + TEND + PTCOMA
-                        | TFUNCTION + tId + PDOSPUNTOS + tId + PTCOMA
-                            + listInstr
-                            + TBEGIN + listInstr2 + TEND + PTCOMA
-                ;
+            
             LLAMADAFUNCION.Rule = tId + PARIZQ + listExpr + PARDER
                 ;
             instruccion.ErrorRule = SyntaxError + ";";
             instruccion2.ErrorRule = SyntaxError + ";";
             DECLARACION.Rule = TVAR + tId + PDOSPUNTOS + tId
-                                | tId + PDOSPUNTOS 
                                 | TVAR + tId + PDOSPUNTOS + tId + IGUAL + expresion
                 ;
-
+            // Expresiones (Devuleven un valor)
             expresion.Rule = MENOS + expresion
                 | expresion + MAS + expresion
                 | expresion + MENOS + expresion

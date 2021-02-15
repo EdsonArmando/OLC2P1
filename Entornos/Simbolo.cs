@@ -9,11 +9,17 @@ namespace Proyecto1_Compi2.Entornos
         public EnumTipoDato tipo;
         public String id;
         public Object valor;
-        public Simbolo(EnumTipoDato tipo, Object valor, String id)
+        public string ambito;
+        public Simbolo(EnumTipoDato tipo, Object valor, String id, String ambito)
         {
             this.id = id;
             this.tipo = tipo;
             this.valor = valor;
+            this.ambito = ambito;
+        }
+        public Object getValor()
+        {
+            return this.valor;
         }
         public EnumTipoDato getTipo()
         {

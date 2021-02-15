@@ -8,14 +8,24 @@ namespace Proyecto1_Compi2.Expresiones
 {
     class Id : Abstracto.Expresion
     {
+        string id;
+        public Id(string id)
+        {
+            this.id = id;
+        }
         public override Simbolo.EnumTipoDato getTipo()
         {
-            throw new NotImplementedException();
+            return this.tipo;
         }
 
         public override Expresion obtenerValor(Entornos.Entorno ent)
         {
-            throw new NotImplementedException();
+            Simbolo simbolo = ent.obtener(id,ent);
+            if (simbolo != null)
+            {
+                return new Literal(simbolo.getTipo(), simbolo.getValor());
+            }
+            return new Literal(Simbolo.EnumTipoDato.ERROR, "@Error@");
         }
     }
 }
