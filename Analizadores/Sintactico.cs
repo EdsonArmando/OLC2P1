@@ -54,7 +54,10 @@ namespace Proyecto1_Compi2.Analizadores
             LinkedList<Abstracto.Instruccion> instrucciones = new LinkedList<Abstracto.Instruccion>();
             for (int i = 0; i < actual.ChildNodes.Count; i++)
             {
-                Abstracto.Instruccion nuevo = instruccion(actual.ChildNodes.ElementAt(i), "", null, instrucciones);
+                String esFuncion = actual.ChildNodes.ElementAt(i).ChildNodes.ElementAt(0).Term.Name;
+                if (esFuncion != "funcion" && esFuncion != "procedure") {
+                    Abstracto.Instruccion nuevo = instruccion(actual.ChildNodes.ElementAt(i), "", null, instrucciones);
+                }
             }
             return instrucciones;
         }
@@ -65,10 +68,38 @@ namespace Proyecto1_Compi2.Analizadores
         }
         private LinkedList<Abstracto.Instruccion> listInstr2(ParseTreeNode actual)
         {
-
             return null;
         }
-
+        private LinkedList<Abstracto.Instruccion> listInstr2Temp(ParseTreeNode actual)
+        {
+            LinkedList<Abstracto.Instruccion> instrucciones = new LinkedList<Abstracto.Instruccion>();
+            for (int i = 0; i < actual.ChildNodes.Count; i++)
+            {
+                Abstracto.Instruccion nuevo = devDeclaracionProcedure_Funciones(actual.ChildNodes.ElementAt(i));
+                instrucciones.AddLast(nuevo);
+            }
+            return instrucciones;
+        }
+        private Abstracto.Instruccion devDeclaracionProcedure_Funciones(ParseTreeNode actual) {
+            string NoTerminal = actual.Term.Name;
+            switch (NoTerminal.ToLower()) {
+                case "declaracion":
+                    if (actual.ChildNodes.Count == 3)
+                    {
+                        return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(2)), actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0], null, 1, 1);
+                    }
+                    else if (actual.ChildNodes.Count == 4)
+                    {
+                        return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1,true);
+                    }
+                    else if (actual.ChildNodes.Count == 6)
+                    {
+                        return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(5)), 1, 1);
+                    }
+                    break;
+            }
+            return null;
+        }
         /*
        Funcion para logra desanidar las funciones
         */
@@ -101,18 +132,24 @@ namespace Proyecto1_Compi2.Analizadores
                     {
                         for (int i = 0; i < funcion.ChildNodes.ElementAt(8).ChildNodes.Count; i++)
                         {
-                            Abstracto.Instruccion nuevo = instruccion(funcion.ChildNodes.ElementAt(8).ChildNodes.ElementAt(i), funcionHija, funcion.ChildNodes.ElementAt(3),instrucciones);
+                            if (funcion.ChildNodes.ElementAt(8).ChildNodes.ElementAt(i).ChildNodes.ElementAt(0).Term.Name != "declaracion")
+                            {
+                                Abstracto.Instruccion nuevo = instruccion(funcion.ChildNodes.ElementAt(8).ChildNodes.ElementAt(i), funcionHija, funcion.ChildNodes.ElementAt(3), instrucciones);
+                            }
                         }
-                        temp = new Funcion(funcionHija, listaExpresiones(funcion.ChildNodes.ElementAt(3)), listInstr2(funcion.ChildNodes.ElementAt(10)), listInstr2(funcion.ChildNodes.ElementAt(8)));
+                        temp = new Funcion(funcionHija, listInstr2Temp(funcion.ChildNodes.ElementAt(3)), Listainstrucciones(funcion.ChildNodes.ElementAt(10)), Listainstrucciones2(funcion.ChildNodes.ElementAt(8)));
                         instrucciones.AddLast(temp);
                         return temp;
                     }
                     else {
                         for (int i = 0; i < funcion.ChildNodes.ElementAt(5).ChildNodes.Count; i++)
                         {
-                            instruccion(funcion.ChildNodes.ElementAt(5).ChildNodes.ElementAt(i), funcionHija, ListaParametrosPadre,instrucciones);
+                            if (funcion.ChildNodes.ElementAt(5).ChildNodes.ElementAt(i).ChildNodes.ElementAt(0).Term.Name != "declaracion")
+                            {
+                                instruccion(funcion.ChildNodes.ElementAt(5).ChildNodes.ElementAt(i), funcionHija, ListaParametrosPadre, instrucciones);
+                            }
                         }
-                        temp = new Funcion(funcionHija, null, listInstr2(funcion.ChildNodes.ElementAt(7)), listInstr2(funcion.ChildNodes.ElementAt(5)));
+                        temp = new Funcion(funcionHija, null, Listainstrucciones(funcion.ChildNodes.ElementAt(7)), Listainstrucciones2(funcion.ChildNodes.ElementAt(5)));
                         instrucciones.AddLast(temp);
                         return temp;
                     }
@@ -136,9 +173,12 @@ namespace Proyecto1_Compi2.Analizadores
                     {
                         for (int i = 0; i < procedure.ChildNodes.ElementAt(6).ChildNodes.Count; i++)
                         {
-                            Abstracto.Instruccion nuevo = instruccion(procedure.ChildNodes.ElementAt(6).ChildNodes.ElementAt(i), ProcedureHija, procedure.ChildNodes.ElementAt(3), instrucciones);
+                            if (procedure.ChildNodes.ElementAt(6).ChildNodes.ElementAt(i).ChildNodes.ElementAt(0).Term.Name != "declaracion")
+                            {
+                                Abstracto.Instruccion nuevo = instruccion(procedure.ChildNodes.ElementAt(6).ChildNodes.ElementAt(i), ProcedureHija, procedure.ChildNodes.ElementAt(3), instrucciones);
+                            }
                         }
-                        temp2 = new Procedure(ProcedureHija, listaExpresiones(procedure.ChildNodes.ElementAt(3)), listInstr2(procedure.ChildNodes.ElementAt(8)), listInstr2(procedure.ChildNodes.ElementAt(6)),1,1);
+                        temp2 = new Procedure(ProcedureHija, listInstr2Temp(procedure.ChildNodes.ElementAt(3)), Listainstrucciones(procedure.ChildNodes.ElementAt(8)), Listainstrucciones2(procedure.ChildNodes.ElementAt(6)),1,1);
                         instrucciones.AddLast(temp2);
                         return temp2;
                     }
@@ -158,7 +198,7 @@ namespace Proyecto1_Compi2.Analizadores
                     instrucciones.AddLast(new Print(devListExpresiones(actual.ChildNodes.ElementAt(2)), 1, 1));
                     return null;
                 case "declaracion":
-                    if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 3)
+                    if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 4)
                     {
                         instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1));
                     }
@@ -168,7 +208,10 @@ namespace Proyecto1_Compi2.Analizadores
                         return null;
                 case "llamadafuncion":
                         instrucciones.AddLast(new LlamadaFuncion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)),1,1));
-                    return null;  
+                    return null;
+                case "returnfuncion":
+                        instrucciones.AddLast(new Return(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5))));
+                    return null;
                 default:
                     return null;
             }
@@ -176,7 +219,7 @@ namespace Proyecto1_Compi2.Analizadores
         /*
             Resolviendo expresiones Arimeticas
         */
-        public Arimetica expresion_numerica(ParseTreeNode actual)
+        public Abstracto.Expresion expresion_numerica(ParseTreeNode actual)
             {
             if (actual.ChildNodes.Count == 3)
             {
@@ -218,6 +261,8 @@ namespace Proyecto1_Compi2.Analizadores
                 {
                     String tokenValor = actual.ChildNodes.ElementAt(0).ToString();
                     return new Arimetica(tokenValor.Remove(tokenValor.ToCharArray().Length - 10, 10), Arimetica.Tipo_operacion.CADENA);
+                } else if (tipo.Name.ToLower() == "llamadafuncion") {
+                    return new LlamadaFuncion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), 1, 1);
                 }
                 else {
                     return new Arimetica(Double.Parse(actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0]));

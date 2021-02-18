@@ -8,11 +8,11 @@ namespace Proyecto1_Compi2.Expresiones
 {
     class Arimetica : Abstracto.Expresion
     {
-        private Arimetica operadorDer;
-        private Arimetica operadorIzq;
+        private Expresion operadorDer;
+        private Expresion operadorIzq;
         private Expresion objeto;
         private Tipo_operacion tipo;
-        public Arimetica(Arimetica operadorIzq, Arimetica operadorDer, Tipo_operacion tipo)
+        public Arimetica(Expresion operadorIzq, Expresion operadorDer, Tipo_operacion tipo)
         {
             this.tipo = tipo;
             this.operadorIzq = operadorIzq;
@@ -73,7 +73,7 @@ namespace Proyecto1_Compi2.Expresiones
             {
                 Expresion izquierda = operadorIzq.obtenerValor(ent);
                 Expresion derecha = operadorDer.obtenerValor(ent);
-                if (izquierda.tipo == Simbolo.EnumTipoDato.DOUBLE && derecha.tipo == Simbolo.EnumTipoDato.DOUBLE || izquierda.tipo == Simbolo.EnumTipoDato.INT && derecha.tipo == Simbolo.EnumTipoDato.INT)
+                if (izquierda.tipo == Simbolo.EnumTipoDato.DOUBLE && derecha.tipo == Simbolo.EnumTipoDato.DOUBLE || izquierda.tipo == Simbolo.EnumTipoDato.INT && derecha.tipo == Simbolo.EnumTipoDato.INT || izquierda.tipo == Simbolo.EnumTipoDato.DOUBLE && derecha.tipo == Simbolo.EnumTipoDato.INT || izquierda.tipo == Simbolo.EnumTipoDato.INT && derecha.tipo == Simbolo.EnumTipoDato.DOUBLE)
                 {
                     return new Literal(Simbolo.EnumTipoDato.DOUBLE, (double)izquierda.valor + (double)derecha.valor);
                 }

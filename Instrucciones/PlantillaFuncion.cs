@@ -6,11 +6,8 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    abstract class PlantillaFuncion : Instruccion
+    abstract class PlantillaFuncion :  Expresion
     {
-        public Retornar Ejecutar(Entorno ent, String ambito)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void setParametros(LinkedList<Expresion> lista);
     }
 }

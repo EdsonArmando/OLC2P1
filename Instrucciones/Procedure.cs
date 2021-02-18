@@ -8,15 +8,15 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Procedure : Expresion,Instruccion
+    class Procedure : PlantillaFuncion, Instruccion
     {
         public String id;
         public int fila, columna;
         public LinkedList<Abstracto.Expresion> param_Actuales;
-        public LinkedList<Abstracto.Expresion> param_Formales;
+        public LinkedList<Abstracto.Instruccion> param_Formales;
         public LinkedList<Instruccion> listInstrucciones;
         public LinkedList<Instruccion> listVarLocales;
-        public Procedure(String id, LinkedList<Abstracto.Expresion> param_Formales, LinkedList<Instruccion> listInstrucciones, LinkedList<Instruccion> listVarLocales,int fila, int columna)
+        public Procedure(String id, LinkedList<Abstracto.Instruccion> param_Formales, LinkedList<Instruccion> listInstrucciones, LinkedList<Instruccion> listVarLocales,int fila, int columna)
         {
             this.id = id;
             this.param_Formales = param_Formales;
@@ -45,15 +45,20 @@ namespace Proyecto1_Compi2.Instrucciones
                     decla.Ejecutar(tablaLocal,this.id);
                 }
             }
-            if (param_Actuales != null && param_Formales != null && param_Actuales.Count == param_Formales.Count  )
+            if (param_Actuales != null && param_Formales != null)
             {
-                for (int i = 0; i < param_Formales.Count; i++)
-                {
-                    Arimetica op = (Arimetica)param_Formales.ElementAt(i);
-                    Expresion val = param_Actuales.ElementAt(i).obtenerValor(ent);
-                    Declaracion declaracion = new Declaracion(val.tipo,op.valor.ToString(), val,this.fila,this.columna);
-                    declaracion.Ejecutar(tablaLocal,this.id);
+                if (param_Actuales.Count == param_Formales.Count) {
+                    for (int i = 0; i < param_Formales.Count; i++)
+                    {
+                        Declaracion temporal = (Declaracion)param_Formales.ElementAt(i);
+                        temporal.setExpresion(param_Actuales.ElementAt(i).obtenerValor(ent));
+                        temporal.Ejecutar(tablaLocal, this.id);
+                    }
                 }
+                else {
+                    Form1.salidaConsola.AppendText("El numero de parametros no coincide!!!\n");
+                    return null;
+                }              
             }
             foreach (Instruccion instr in listInstrucciones)
             {
@@ -66,7 +71,7 @@ namespace Proyecto1_Compi2.Instrucciones
             return null;
         }
 
-        public void setParametros(LinkedList<Expresion> parametros)
+        public override void setParametros(LinkedList<Expresion> parametros)
         {
             this.param_Actuales = parametros;
         }

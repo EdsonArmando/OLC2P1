@@ -19,7 +19,7 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public Retornar Ejecutar(Entorno ent,String ambito)
         {
-            Procedure f = (Procedure)Singleton.getInstance().getFuncion(this.id.ToLower());
+            PlantillaFuncion f = (PlantillaFuncion)Singleton.getInstance().getFuncion(this.id.ToLower());
             if (f != null)
             {
                 f.setParametros(parametros);
@@ -35,7 +35,7 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public override Expresion obtenerValor(Entorno ent)
         {
-            Procedure f = (Procedure)Singleton.getInstance().getFuncion(this.id);
+            PlantillaFuncion f = (PlantillaFuncion)Singleton.getInstance().getFuncion(this.id.ToLower());
             if (f != null)
             {
                 f.setParametros(parametros);

@@ -26,6 +26,7 @@ namespace Proyecto1_Compi2.Analizadores
             var REVALUAR = ToTerm("evaluar");
             var TFUNCTION = ToTerm("function");
             var Twriteln = ToTerm("writeln");
+            var tExit = ToTerm("exit");
             var tProcedure = ToTerm("procedure");
             var TBEGIN = ToTerm("begin");
             var TVAR = ToTerm("var");
@@ -55,6 +56,7 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal ini = new NonTerminal("ini");
             NonTerminal instruccion = new NonTerminal("instruccion");
             NonTerminal instruccion2 = new NonTerminal("instruccion2");
+            NonTerminal returnFuncion = new NonTerminal("returnFuncion");
             NonTerminal listInstr = new NonTerminal("listInstr");
             NonTerminal listExpr = new NonTerminal("listExpr");
             NonTerminal listInstr2 = new NonTerminal("listInstr2");
@@ -99,9 +101,11 @@ namespace Proyecto1_Compi2.Analizadores
                          | Empty;
             listExpr.ErrorRule = SyntaxError + ",";
             //Instrucciones dentro de las funciones y Procedimientos
+            returnFuncion.Rule = tExit + PARIZQ + tId + PDOSPUNTOS + IGUAL + expresion + PARDER + PTCOMA
+                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA ;
             instruccion2.Rule = //Twriteln + PARIZQ + expresion + PARDER + PTCOMA
                                  Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
-                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA
+                                | returnFuncion
                                 | LLAMADAFUNCION + PTCOMA
             ;
             listFuncion.Rule = MakePlusRule(listFuncion, FUNCION);
@@ -112,6 +116,7 @@ namespace Proyecto1_Compi2.Analizadores
             instruccion2.ErrorRule = SyntaxError + ";";
             DECLARACION.Rule = TVAR + tId + PDOSPUNTOS + tId
                                 | TVAR + tId + PDOSPUNTOS + tId + IGUAL + expresion
+                                | tId + PDOSPUNTOS + tId 
                 ;
             // Expresiones (Devuleven un valor)
             expresion.Rule = MENOS + expresion
