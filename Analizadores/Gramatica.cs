@@ -117,9 +117,9 @@ namespace Proyecto1_Compi2.Analizadores
             //Instrucciones dentro de las funciones y Procedimientos
             returnFuncion.Rule = tExit + PARIZQ + tId + PDOSPUNTOS + IGUAL + expresion + PARDER + PTCOMA
                                 | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA ;
-            IF.Rule = tIf + expresion + then  +"\t"+listInstr2 + "\r" +ELSEST
+            IF.Rule = tIf + expresion + then  + TBEGIN + listInstr2 + TEND + PTCOMA +ELSEST
                 ;
-            ELSEST.Rule = tElse + listInstr2
+            ELSEST.Rule = tElse + TBEGIN + listInstr2 + TEND + PTCOMA
                         | tElse + IF
                         | Empty
                       ;

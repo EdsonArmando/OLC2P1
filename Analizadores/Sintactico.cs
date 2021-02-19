@@ -1,4 +1,5 @@
 ﻿using Irony.Parsing;
+using Proyecto1_Compi2.Abstracto;
 using Proyecto1_Compi2.Entornos;
 using Proyecto1_Compi2.Expresiones;
 using Proyecto1_Compi2.Instrucciones;
@@ -20,8 +21,6 @@ namespace Proyecto1_Compi2.Analizadores
             Parser parser = new Parser(lenguaje);
             ParseTree arbol = parser.Parse(entrada);
             ParseTreeNode raiz = arbol.Root;
-            GraficarAST graficar = new GraficarAST(raiz);
-            graficar.Graficar();
             if (raiz == null || arbol.ParserMessages.Count()>0)
             {
                 for (int i = 0; i < arbol.ParserMessages.Count(); i++)
@@ -33,7 +32,9 @@ namespace Proyecto1_Compi2.Analizadores
                 return;
             }
             else
-            {                
+            {
+                GraficarAST graficar = new GraficarAST(raiz);
+                graficar.Graficar();
                 Form1.salidaConsola.AppendText("Se analizo correctamente\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
@@ -100,6 +101,20 @@ namespace Proyecto1_Compi2.Analizadores
                         return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(5)), 1, 1);
                     }
                     break;
+                case "if":
+                    String tokenSubIf = actual.ChildNodes.ElementAt(7).ChildNodes.ElementAt(1).Term.Name;
+                    if (tokenSubIf.ToLower() == "if")
+                    {
+                        return new If(expresion_numerica(actual.ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(4)), devDeclaracionProcedure_Funciones(actual.ChildNodes.ElementAt(7).ChildNodes.ElementAt(1)), 1, 1, true);
+                    }
+                    if (actual.ChildNodes.ElementAt(7).ChildNodes.Count != 0)
+                    {
+                        return new If(expresion_numerica(actual.ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(4)), Listainstrucciones(actual.ChildNodes.ElementAt(7).ChildNodes.ElementAt(2)), 1, 1);
+                    }
+                    else
+                    {
+                        return new If(expresion_numerica(actual.ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(4)), null, 1, 1, true);
+                    }
             }
             return null;
         }
@@ -216,7 +231,20 @@ namespace Proyecto1_Compi2.Analizadores
                         instrucciones.AddLast(new Return(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5))));
                     return null;
                 case "if":
-                    return null;
+                    String tokenSubIf = actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(7).ChildNodes.ElementAt(1).Term.Name;
+                    if (tokenSubIf.ToLower()=="if") {
+                        instrucciones.AddLast(new If(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)), devDeclaracionProcedure_Funciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(7).ChildNodes.ElementAt(1)), 1, 1, true));
+                        return null;
+                    }
+                    if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(7).ChildNodes.Count != 0)
+                    {
+                        instrucciones.AddLast(new If(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(7).ChildNodes.ElementAt(2)), 1, 1));
+                        return null;
+                    }
+                    else {
+                        instrucciones.AddLast(new If(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)), null, 1, 1,true));
+                        return null; 
+                    } 
                 default:
                     return null;
             }
