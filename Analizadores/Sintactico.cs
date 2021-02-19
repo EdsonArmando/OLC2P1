@@ -2,6 +2,7 @@
 using Proyecto1_Compi2.Entornos;
 using Proyecto1_Compi2.Expresiones;
 using Proyecto1_Compi2.Instrucciones;
+using Proyecto1_Compi2.Reportes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace Proyecto1_Compi2.Analizadores
             Parser parser = new Parser(lenguaje);
             ParseTree arbol = parser.Parse(entrada);
             ParseTreeNode raiz = arbol.Root;
+            GraficarAST graficar = new GraficarAST(raiz);
+            graficar.Graficar();
             if (raiz == null || arbol.ParserMessages.Count()>0)
             {
                 for (int i = 0; i < arbol.ParserMessages.Count(); i++)
@@ -30,7 +33,7 @@ namespace Proyecto1_Compi2.Analizadores
                 return;
             }
             else
-            {
+            {                
                 Form1.salidaConsola.AppendText("Se analizo correctamente\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
@@ -212,6 +215,8 @@ namespace Proyecto1_Compi2.Analizadores
                 case "returnfuncion":
                         instrucciones.AddLast(new Return(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5))));
                     return null;
+                case "if":
+                    return null;
                 default:
                     return null;
             }
@@ -219,6 +224,56 @@ namespace Proyecto1_Compi2.Analizadores
         /*
             Resolviendo expresiones Arimeticas
         */
+        public Abstracto.Expresion expresion_logica(ParseTreeNode actual)
+        {
+            if (actual.ChildNodes.Count == 1)
+            {
+                string tokenValor = actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0];
+                return new Arimetica(tokenValor, Arimetica.Tipo_operacion.IDENTIFICADOR);
+            }
+            string tokenOperador = actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0];
+            if (tokenOperador.Equals("<"))
+            {
+                 return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.MENOR_QUE);                
+            }
+            else if (tokenOperador.Equals("<="))
+            {
+                return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.MENOR_IGUAL_QUE);
+            }
+            else if (tokenOperador.Equals(">="))
+            {
+                return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.MAYOR_IGUAL_QUE);
+            }
+            else if (tokenOperador.Equals("=="))
+            {
+                return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.IGUAL_QUE);
+            }
+            else if (tokenOperador.Equals("&&"))
+            {
+                return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.AND);
+            }
+            else if (tokenOperador.Equals("||"))
+            {
+                return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.OR);
+            }
+            else if (tokenOperador.Equals("^"))
+            {
+                return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.XOR);
+            }
+            else if (tokenOperador.Equals("!="))
+            {
+                return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIFERENTE);
+            }
+            else if (tokenOperador.Equals(">"))
+            {
+                return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.MAYOR_QUE);
+            }
+            else
+            {
+                return expresion_logica(actual.ChildNodes.ElementAt(1));
+            }
+
+        }
         public Abstracto.Expresion expresion_numerica(ParseTreeNode actual)
             {
             if (actual.ChildNodes.Count == 3)
@@ -237,7 +292,14 @@ namespace Proyecto1_Compi2.Analizadores
                     case "/":
                         return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIVISION);
                     default:
-                        return expresion_numerica(actual.ChildNodes.ElementAt(1));
+                        if (tokenOperador.Equals(">") || tokenOperador.Equals("<") || tokenOperador.Equals(">=") || tokenOperador.Equals("<=") || tokenOperador.Equals("==")
+                         || tokenOperador.Equals("&&") || tokenOperador.Equals("||") || tokenOperador.Equals("^") || tokenOperador.Equals("!="))
+                        {
+                            return expresion_logica(actual);
+                        }
+                        else {
+                            return expresion_numerica(actual.ChildNodes.ElementAt(1));
+                        }
                 }
 
             }            

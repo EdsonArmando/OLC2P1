@@ -95,6 +95,50 @@ namespace Proyecto1_Compi2.Expresiones
                 Simbolo sim = ent.obtener(valor.ToString(),ent);
                 return new Literal(sim.tipo, Double.Parse(sim.valor.ToString()));
             }
+            /*
+             * 
+             *      OPERACIONES LOGICAS
+             * 
+             */
+            else if (tipo == Tipo_operacion.MAYOR_QUE)
+            {
+
+                return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor > (Double)operadorDer.obtenerValor(ent).valor);
+            }
+            else if (tipo == Tipo_operacion.AND)
+            {
+                return new Literal(Simbolo.EnumTipoDato.BOOLEAN, bool.Parse(operadorIzq.obtenerValor(ent).valor.ToString()) && bool.Parse(operadorDer.obtenerValor(ent).valor.ToString()));
+            }
+            else if (tipo == Tipo_operacion.OR)
+            {
+                return new Literal(Simbolo.EnumTipoDato.BOOLEAN, bool.Parse(operadorIzq.obtenerValor(ent).valor.ToString()) || bool.Parse(operadorDer.obtenerValor(ent).valor.ToString()));
+            }
+            else if (tipo == Tipo_operacion.XOR)
+            {
+                return new Literal(Simbolo.EnumTipoDato.BOOLEAN, bool.Parse(operadorIzq.obtenerValor(ent).valor.ToString()) ^ bool.Parse(operadorDer.obtenerValor(ent).valor.ToString()));
+            }
+            else if (tipo == Tipo_operacion.DIFERENTE)
+            {
+                Double izquierda = (Double)operadorIzq.obtenerValor(ent).valor;
+                Double derecha = (Double)operadorDer.obtenerValor(ent).valor;
+                return new Literal(Simbolo.EnumTipoDato.BOOLEAN, izquierda != derecha);
+            }
+            else if (tipo == Tipo_operacion.IGUAL_QUE)
+            {
+                return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor == (Double)operadorDer.obtenerValor(ent).valor);
+            }
+            else if (tipo == Tipo_operacion.MENOR_QUE)
+            {
+                return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor < (Double)operadorDer.obtenerValor(ent).valor);
+            }
+            else if (tipo == Tipo_operacion.MENOR_IGUAL_QUE)
+            {
+                return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor <= (Double)operadorDer.obtenerValor(ent).valor);
+            }
+            else if (tipo == Tipo_operacion.MAYOR_IGUAL_QUE)
+            {
+                return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor >= (Double)operadorDer.obtenerValor(ent).valor);
+            }
             return null;
         }
         public enum Tipo_operacion
@@ -109,7 +153,16 @@ namespace Proyecto1_Compi2.Expresiones
             IDENTIFICADOR,
             CADENA,
             POTENCIA,
-            CONCATENACION
+            CONCATENACION,
+            MAYOR_QUE,
+            MENOR_QUE,
+            IGUAL_QUE,
+            AND,
+            OR,
+            XOR,
+            DIFERENTE,
+            MENOR_IGUAL_QUE,
+            MAYOR_IGUAL_QUE
         }
     }
 }

@@ -26,6 +26,9 @@ namespace Proyecto1_Compi2.Analizadores
             var REVALUAR = ToTerm("evaluar");
             var TFUNCTION = ToTerm("function");
             var Twriteln = ToTerm("writeln");
+            var tIf = ToTerm("if");
+            var then = ToTerm("then");
+            var tElse = ToTerm("else");
             var tExit = ToTerm("exit");
             var tProcedure = ToTerm("procedure");
             var TBEGIN = ToTerm("begin");
@@ -44,11 +47,20 @@ namespace Proyecto1_Compi2.Analizadores
             var POR = ToTerm("*");
             var POW = ToTerm("^");
             var DIVIDIDO = ToTerm("/");
+            var tAnd = ToTerm("&&");
+            var tOr = ToTerm("||");
+            var tDifQ = ToTerm("!=");
+            var tDobleIgual = ToTerm("==");
+            var tMayorQ = ToTerm(">");
+            var tmayorIgual = ToTerm(">=");
+            var tmenorIgual = ToTerm("<=");
+            var tMenorQ = ToTerm("<");
+
 
             RegisterOperators(1, MAS, MENOS);
             RegisterOperators(2, POR, DIVIDIDO, POW);
-            /*RegisterOperators(3, tMayorQ, tMenorQ);
-            RegisterOperators(4, tOr, tAnd, tXor, tDifQ, tPunto);*/
+            RegisterOperators(3, tMayorQ, tMenorQ,tmenorIgual,tmayorIgual);
+            RegisterOperators(4, tOr, tAnd, tDifQ);
 
             #endregion
 
@@ -66,6 +78,8 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal DECLARACION = new NonTerminal("declaracion");
             NonTerminal FUNCION = new NonTerminal("funcion");
             NonTerminal PROCEDURE = new NonTerminal("procedure");
+            NonTerminal IF = new NonTerminal("if");
+            NonTerminal ELSEST = new NonTerminal("else");
             NonTerminal LLAMADAFUNCION = new NonTerminal("llamadaFuncion");
             #endregion
 
@@ -103,10 +117,17 @@ namespace Proyecto1_Compi2.Analizadores
             //Instrucciones dentro de las funciones y Procedimientos
             returnFuncion.Rule = tExit + PARIZQ + tId + PDOSPUNTOS + IGUAL + expresion + PARDER + PTCOMA
                                 | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA ;
+            IF.Rule = tIf + expresion + then  +"\t"+listInstr2 + "\r" +ELSEST
+                ;
+            ELSEST.Rule = tElse + listInstr2
+                        | tElse + IF
+                        | Empty
+                      ;
             instruccion2.Rule = //Twriteln + PARIZQ + expresion + PARDER + PTCOMA
                                  Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
                                 | returnFuncion
                                 | LLAMADAFUNCION + PTCOMA
+                                | IF
             ;
             listFuncion.Rule = MakePlusRule(listFuncion, FUNCION);
             
@@ -124,6 +145,15 @@ namespace Proyecto1_Compi2.Analizadores
                 | expresion + MENOS + expresion
                 | expresion + POR + expresion
                 | expresion + DIVIDIDO + expresion
+                | expresion + tMenorQ + expresion
+                | expresion + tMayorQ + expresion
+                | expresion + tmenorIgual+ expresion
+                | expresion + tmayorIgual + expresion
+                | expresion + tDobleIgual + expresion
+                | expresion + tOr + expresion
+                | expresion + tAnd + expresion
+                | expresion + tDifQ + expresion
+
                 | NUMERO
                 | tCadena2
                 | tId

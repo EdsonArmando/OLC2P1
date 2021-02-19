@@ -17,5 +17,14 @@ namespace Proyecto1_Compi2
             InitializeComponent();
         }
 
+        public void idGraficar_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
