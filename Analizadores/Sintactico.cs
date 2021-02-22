@@ -34,7 +34,8 @@ namespace Proyecto1_Compi2.Analizadores
             else
             {
                 GraficarAST graficar = new GraficarAST(raiz);
-                //graficar.Graficar();
+                graficar.recorrerRaiz(raiz);
+                graficar.generarArchivo();
                 Form1.salidaConsola.AppendText("Se analizo correctamente\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
