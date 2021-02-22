@@ -30,7 +30,7 @@ namespace Proyecto1_Compi2.Entornos
                 sim = (Simbolo)entorno.tablaSimbolos[id];
                 return sim;
             }
-            else if (anterior != null)
+            else if (entorno.anterior != null)
             {
                 sim = obtener(id,entorno.anterior);
                 return sim;
@@ -47,6 +47,19 @@ namespace Proyecto1_Compi2.Entornos
                 {
                     var value = tablaSimbolos[key];
                 }
+            }
+        }
+        public void setVariable(string nombre, Simbolo valor,Entorno ent) {
+            if (this.tablaSimbolos.ContainsKey(nombre))
+            {
+                ent.tablaSimbolos.Remove(nombre);
+                ent.tablaSimbolos.Add(nombre, valor);
+                return;
+            }
+            else if (ent.anterior != null)
+            {
+                setVariable(nombre,valor,ent.anterior);
+                return;
             }
         }
         public void Insertar(string nombre, Simbolo valor)

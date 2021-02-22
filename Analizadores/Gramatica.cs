@@ -23,13 +23,20 @@ namespace Proyecto1_Compi2.Analizadores
             NonGrammarTerminals.Add(comentarioBloque);
             NonGrammarTerminals.Add(comentarioBloque2);
             #region Terminales
-            var REVALUAR = ToTerm("evaluar");
+            var twhile = ToTerm("while");
             var TFUNCTION = ToTerm("function");
             var Twriteln = ToTerm("writeln");
+            var tRepeat = ToTerm("repeat");
+            var tUntil = ToTerm("until");
             var tIf = ToTerm("if");
             var then = ToTerm("then");
             var tElse = ToTerm("else");
             var tExit = ToTerm("exit");
+            var tBreak = ToTerm("break");
+            var tContinue = ToTerm("continue");
+            var tFor = ToTerm("for");
+            var tTo = ToTerm("to");
+            var tDo = ToTerm("do");
             var tProcedure = ToTerm("procedure");
             var TBEGIN = ToTerm("begin");
             var TVAR = ToTerm("var");
@@ -47,9 +54,9 @@ namespace Proyecto1_Compi2.Analizadores
             var POR = ToTerm("*");
             var POW = ToTerm("^");
             var DIVIDIDO = ToTerm("/");
-            var tAnd = ToTerm("&&");
-            var tOr = ToTerm("||");
-            var tDifQ = ToTerm("!=");
+            var tAnd = ToTerm("and");
+            var tOr = ToTerm("or");
+            var tDifQ = ToTerm("not");
             var tDobleIgual = ToTerm("==");
             var tMayorQ = ToTerm(">");
             var tmayorIgual = ToTerm(">=");
@@ -59,7 +66,7 @@ namespace Proyecto1_Compi2.Analizadores
 
             RegisterOperators(1, MAS, MENOS);
             RegisterOperators(2, POR, DIVIDIDO, POW);
-            RegisterOperators(3, tMayorQ, tMenorQ,tmenorIgual,tmayorIgual);
+            RegisterOperators(3, tMayorQ, tMenorQ, tmenorIgual, tmayorIgual);
             RegisterOperators(4, tOr, tAnd, tDifQ);
 
             #endregion
@@ -68,7 +75,7 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal ini = new NonTerminal("ini");
             NonTerminal instruccion = new NonTerminal("instruccion");
             NonTerminal instruccion2 = new NonTerminal("instruccion2");
-            NonTerminal returnFuncion = new NonTerminal("returnFuncion");
+            NonTerminal returnFuncion = new NonTerminal("returnFuncion_asignacion");
             NonTerminal listInstr = new NonTerminal("listInstr");
             NonTerminal listExpr = new NonTerminal("listExpr");
             NonTerminal listInstr2 = new NonTerminal("listInstr2");
@@ -79,7 +86,11 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal FUNCION = new NonTerminal("funcion");
             NonTerminal PROCEDURE = new NonTerminal("procedure");
             NonTerminal IF = new NonTerminal("if");
+            NonTerminal FOR = new NonTerminal("for");
+            NonTerminal WHILE = new NonTerminal("while");
             NonTerminal ELSEST = new NonTerminal("else");
+            NonTerminal REPEAT = new NonTerminal("repeat");
+            NonTerminal ASIGNACION = new NonTerminal("asignacion");
             NonTerminal LLAMADAFUNCION = new NonTerminal("llamadaFuncion");
             #endregion
 
@@ -91,6 +102,7 @@ namespace Proyecto1_Compi2.Analizadores
             //Instrucciones que acepta el lenguaje
             instruccion.Rule = DECLARACION + PTCOMA
                                 | FUNCION
+                                | returnFuncion
                                 | PROCEDURE
                                 | LLAMADAFUNCION + PTCOMA
                                 | Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
@@ -99,8 +111,8 @@ namespace Proyecto1_Compi2.Analizadores
                             | tProcedure + tId + PARIZQ + listParam + PARDER + PTCOMA + listInstr + TBEGIN + listInstr2 + TEND + PTCOMA
                         ;
             FUNCION.Rule = TFUNCTION + tId + PARIZQ + listParam + PARDER + PDOSPUNTOS + tId + PTCOMA
-                                + listInstr
-                                + TBEGIN + listInstr2 + TEND + PTCOMA
+                                + listInstr //Variable Locales
+                                + TBEGIN + listInstr2  + TEND + PTCOMA
                         | TFUNCTION + tId + PDOSPUNTOS + tId + PTCOMA
                             + listInstr
                             + TBEGIN + listInstr2 + TEND + PTCOMA
@@ -115,19 +127,30 @@ namespace Proyecto1_Compi2.Analizadores
                          | Empty;
             listExpr.ErrorRule = SyntaxError + ",";
             //Instrucciones dentro de las funciones y Procedimientos
-            returnFuncion.Rule = tExit + PARIZQ + tId + PDOSPUNTOS + IGUAL + expresion + PARDER + PTCOMA
-                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA ;
+            returnFuncion.Rule = tExit + PARIZQ + expresion + PARDER + PTCOMA
+                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA 
+                                ;
             IF.Rule = tIf + expresion + then  + TBEGIN + listInstr2 + TEND + PTCOMA +ELSEST
                 ;
             ELSEST.Rule = tElse + TBEGIN + listInstr2 + TEND + PTCOMA
                         | tElse + IF
                         | Empty
                       ;
+            REPEAT.Rule = tRepeat + listInstr2 + tUntil + expresion + PTCOMA;
+            FOR.Rule = tFor + tId + PDOSPUNTOS + IGUAL + expresion + tTo + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA;
+            WHILE.Rule = twhile + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA;
+            ASIGNACION.Rule = tId + PDOSPUNTOS + IGUAL + expresion ;
             instruccion2.Rule = //Twriteln + PARIZQ + expresion + PARDER + PTCOMA
                                  Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
                                 | returnFuncion
                                 | LLAMADAFUNCION + PTCOMA
                                 | IF
+                                | FOR
+                                | WHILE
+                                | REPEAT
+                                | ASIGNACION + PTCOMA
+                                | tBreak + PTCOMA
+                                | tContinue + PTCOMA
             ;
             listFuncion.Rule = MakePlusRule(listFuncion, FUNCION);
             
@@ -149,7 +172,7 @@ namespace Proyecto1_Compi2.Analizadores
                 | expresion + tMayorQ + expresion
                 | expresion + tmenorIgual+ expresion
                 | expresion + tmayorIgual + expresion
-                | expresion + tDobleIgual + expresion
+                | expresion + IGUAL + expresion
                 | expresion + tOr + expresion
                 | expresion + tAnd + expresion
                 | expresion + tDifQ + expresion

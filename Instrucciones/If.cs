@@ -38,9 +38,15 @@ namespace Proyecto1_Compi2.Instrucciones
                     Retornar retorn = ins.Ejecutar(ent, Ambito);
                     if (retorn.isReturn == true)
                     {
-                        Retornar temp = new Retornar();
-                        temp.valor = retorn.valor;
-                        return temp;
+                        return retorn;
+                    }
+                    if (retorn.isBreak == true)
+                    {
+                        return retorn;
+                    }
+                    if (retorn.isContinue == true)
+                    {
+                        return retorn;
                     }
                 }
                 if (subIf != null)
@@ -51,17 +57,26 @@ namespace Proyecto1_Compi2.Instrucciones
             else {
                 if (subIf != null)
                 {
-                    return subIf.Ejecutar(ent, Ambito);
+                    Retornar ret = subIf.Ejecutar(ent, Ambito);
+                    return ret;
                 }
                 else {
-                    foreach (Instruccion ins in listaInsElse)
-                    {
-                        Retornar retorn = ins.Ejecutar(ent, Ambito);
-                        if (retorn.isReturn == true)
+                    if (listaInsElse != null) {
+                        foreach (Instruccion ins in listaInsElse)
                         {
-                            Retornar temp = new Retornar();
-                            temp.valor = retorn.valor;
-                            return temp;
+                            Retornar retorn = ins.Ejecutar(ent, Ambito);
+                            if (retorn.isReturn == true)
+                            {
+                                return retorn;
+                            }
+                            if (retorn.isBreak == true)
+                            {
+                                return retorn;
+                            }
+                            if (retorn.isContinue == true)
+                            {
+                                return retorn;
+                            }
                         }
                     }
                 }

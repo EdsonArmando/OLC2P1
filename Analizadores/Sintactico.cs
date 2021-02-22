@@ -34,7 +34,7 @@ namespace Proyecto1_Compi2.Analizadores
             else
             {
                 GraficarAST graficar = new GraficarAST(raiz);
-                graficar.Graficar();
+                //graficar.Graficar();
                 Form1.salidaConsola.AppendText("Se analizo correctamente\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
@@ -102,7 +102,10 @@ namespace Proyecto1_Compi2.Analizadores
                     }
                     break;
                 case "if":
-                    String tokenSubIf = actual.ChildNodes.ElementAt(7).ChildNodes.ElementAt(1).Term.Name;
+                    String tokenSubIf = "";
+                    if (actual.ChildNodes.ElementAt(7).ChildNodes.Count > 0) {
+                        tokenSubIf = actual.ChildNodes.ElementAt(7).ChildNodes.ElementAt(1).Term.Name;
+                    }
                     if (tokenSubIf.ToLower() == "if")
                     {
                         return new If(expresion_numerica(actual.ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(4)), devDeclaracionProcedure_Funciones(actual.ChildNodes.ElementAt(7).ChildNodes.ElementAt(1)), 1, 1, true);
@@ -144,7 +147,7 @@ namespace Proyecto1_Compi2.Analizadores
                     }
 
                     /*
-                        Funcion tiene 13 nodos en el nodo 8 se encuentran la funciones anidadas
+                        Funcion tiene 10 nodos en el nodo 8 se encuentran la funciones anidadas
                      */
                     if (funcion.ChildNodes.Count == 13)
                     {
@@ -227,11 +230,22 @@ namespace Proyecto1_Compi2.Analizadores
                 case "llamadafuncion":
                         instrucciones.AddLast(new LlamadaFuncion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)),1,1));
                     return null;
-                case "returnfuncion":
-                        instrucciones.AddLast(new Return(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5))));
+                case "returnfuncion_asignacion":
+                    String token = actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0];
+                    if (token.ToLower()=="exit") {
+                        instrucciones.AddLast(new Return(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2))));
+                    } else{
+                        instrucciones.AddLast(new Asignacion(token,expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
+                    }       
+                    return null;
+                case "repeat":
+                        instrucciones.AddLast(new Repeat(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1))));
                     return null;
                 case "if":
-                    String tokenSubIf = actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(7).ChildNodes.ElementAt(1).Term.Name;
+                    String tokenSubIf = "";
+                    if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(7).ChildNodes.Count != 0) {
+                        tokenSubIf = actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(7).ChildNodes.ElementAt(1).Term.Name;
+                    }
                     if (tokenSubIf.ToLower()=="if") {
                         instrucciones.AddLast(new If(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)), devDeclaracionProcedure_Funciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(7).ChildNodes.ElementAt(1)), 1, 1, true));
                         return null;
@@ -244,7 +258,22 @@ namespace Proyecto1_Compi2.Analizadores
                     else {
                         instrucciones.AddLast(new If(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)), null, 1, 1,true));
                         return null; 
-                    } 
+                    }
+                case "for":
+                    instrucciones.AddLast(new For(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)),expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(6)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(9))));
+                    return null;
+                case "break":
+                    instrucciones.AddLast(new Break());
+                    return null;
+                case "continue":
+                    instrucciones.AddLast(new Continue());
+                    return null;
+                case "asignacion":
+                    instrucciones.AddLast(new Asignacion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
+                    return null;
+                case "while":
+                    instrucciones.AddLast(new While(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
+                    return null;
                 default:
                     return null;
             }
@@ -272,15 +301,15 @@ namespace Proyecto1_Compi2.Analizadores
             {
                 return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.MAYOR_IGUAL_QUE);
             }
-            else if (tokenOperador.Equals("=="))
+            else if (tokenOperador.Equals("="))
             {
                 return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.IGUAL_QUE);
             }
-            else if (tokenOperador.Equals("&&"))
+            else if (tokenOperador.Equals("and"))
             {
                 return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.AND);
             }
-            else if (tokenOperador.Equals("||"))
+            else if (tokenOperador.Equals("or"))
             {
                 return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.OR);
             }
@@ -288,7 +317,7 @@ namespace Proyecto1_Compi2.Analizadores
             {
                 return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.XOR);
             }
-            else if (tokenOperador.Equals("!="))
+            else if (tokenOperador.Equals("not"))
             {
                 return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIFERENTE);
             }
@@ -320,8 +349,8 @@ namespace Proyecto1_Compi2.Analizadores
                     case "/":
                         return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIVISION);
                     default:
-                        if (tokenOperador.Equals(">") || tokenOperador.Equals("<") || tokenOperador.Equals(">=") || tokenOperador.Equals("<=") || tokenOperador.Equals("==")
-                         || tokenOperador.Equals("&&") || tokenOperador.Equals("||") || tokenOperador.Equals("^") || tokenOperador.Equals("!="))
+                        if (tokenOperador.Equals(">") || tokenOperador.Equals("<") || tokenOperador.Equals(">=") || tokenOperador.Equals("<=") || tokenOperador.Equals("=")
+                         || tokenOperador.Equals("and") || tokenOperador.Equals("or") || tokenOperador.Equals("^") || tokenOperador.Equals("not"))
                         {
                             return expresion_logica(actual);
                         }
