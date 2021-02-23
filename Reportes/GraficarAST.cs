@@ -10,7 +10,6 @@ namespace Proyecto1_Compi2.Reportes
     class GraficarAST
     {
         private ParseTreeNode raiz;
-        private int noNodo = 0;
         private String text = "digraph lista{ \n rankdir=TB;node[shape = box, style = filled, color = white];\n";
         public GraficarAST(ParseTreeNode raiz) {
             this.raiz = raiz;

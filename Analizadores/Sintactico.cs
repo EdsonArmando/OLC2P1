@@ -91,15 +91,22 @@ namespace Proyecto1_Compi2.Analizadores
                 case "declaracion":
                     if (actual.ChildNodes.Count == 3)
                     {
-                        return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(2)), actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0], null, 1, 1);
+                        return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(2)), actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0], null, 1, 1,"");
                     }
                     else if (actual.ChildNodes.Count == 4)
                     {
-                        return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1,true);
+                        if (actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var")
+                        {
+                            return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1,"var");
+                        }
+                        else if (actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "const")
+                        {
+                           return new Declaracion(Simbolo.EnumTipoDato.CONST, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), 1, 1,"const");
+                        }
                     }
                     else if (actual.ChildNodes.Count == 6)
                     {
-                        return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(5)), 1, 1);
+                        return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(5)), 1, 1,"");
                     }
                     break;
                 case "if":
@@ -222,10 +229,14 @@ namespace Proyecto1_Compi2.Analizadores
                 case "declaracion":
                     if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 4)
                     {
-                        instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1));
+                        if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var") {
+                            instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1,"var"));
+                        } else if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "const") {
+                            instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.CONST, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), 1, 1,"const"));
+                        }
                     }
                     else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 6) {
-                        instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), 1, 1));
+                        instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), 1, 1, ""));
                     }
                         return null;
                 case "llamadafuncion":

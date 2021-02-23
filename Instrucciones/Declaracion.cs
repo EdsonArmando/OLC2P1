@@ -12,7 +12,7 @@ namespace Proyecto1_Compi2.Instrucciones
         String nombreVariable;
         Expresion expresion;
         int fila, columna;
-        bool esReferencia;
+        String esReferencia_const;
 
         public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna)
         {
@@ -22,21 +22,21 @@ namespace Proyecto1_Compi2.Instrucciones
             this.fila = fila;
             this.columna = columna;
         }
-        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna,bool esReferencia)
+        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna,String esReferencia_const)
         {
             this.tipoVariable = tipo;
             this.nombreVariable = nombre;
             this.expresion = expresion;
             this.fila = fila;
             this.columna = columna;
-            this.esReferencia = esReferencia;
+            this.esReferencia_const = esReferencia_const;
         }
         public Retornar Ejecutar(Entorno ent,String ambito)
         {
             Expresion resultado = expresion.obtenerValor(ent); //Resuelvo la expresión que le quiero asignar a la variable
             if (resultado != null)
             {
-                ent.Insertar(this.nombreVariable, new Simbolo(this.tipoVariable, resultado.valor, nombreVariable,ambito)); // Guardo la variable
+                ent.Insertar(this.nombreVariable, new Simbolo(this.tipoVariable, resultado.valor, nombreVariable,ambito,esReferencia_const)); // Guardo la variable
             }
             return new Retornar();
         }

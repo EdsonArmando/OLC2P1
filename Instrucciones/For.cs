@@ -24,7 +24,7 @@ namespace Proyecto1_Compi2.Instrucciones
             bool seguirFor = true;
             Simbolo temp = ent.obtener(id,ent); 
             Expresion valorNuevo = valorInicio.obtenerValor(ent);
-            Simbolo sim = new Simbolo(temp.tipo, valorNuevo.valor,id,temp.ambito);
+            Simbolo sim = new Simbolo(temp.tipo, valorNuevo.valor,id,temp.ambito,temp.referencia_const);
             ent.setVariable(id,sim,ent);
             Arimetica condicion = new Arimetica(new Arimetica(id,Arimetica.Tipo_operacion.IDENTIFICADOR),valorFin,Arimetica.Tipo_operacion.MENOR_QUE);
             Aumento aumento = new Aumento(id);

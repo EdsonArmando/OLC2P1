@@ -18,7 +18,7 @@ namespace Proyecto1_Compi2.Instrucciones
             Simbolo variable = ent.obtener(id,ent);
             int valAument = int.Parse(variable.valor.ToString());
             valAument = valAument + 1;
-            Simbolo sim = new Simbolo(variable.tipo, (object)valAument, id, variable.ambito);
+            Simbolo sim = new Simbolo(variable.tipo, (object)valAument, id, variable.ambito,variable.referencia_const);
             ent.setVariable(id, sim, ent);
             return new Retornar();
         }

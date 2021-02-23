@@ -28,6 +28,7 @@ namespace Proyecto1_Compi2.Analizadores
             var Twriteln = ToTerm("writeln");
             var tRepeat = ToTerm("repeat");
             var tUntil = ToTerm("until");
+            var tConst = ToTerm("const");
             var tIf = ToTerm("if");
             var then = ToTerm("then");
             var tElse = ToTerm("else");
@@ -160,6 +161,7 @@ namespace Proyecto1_Compi2.Analizadores
             instruccion2.ErrorRule = SyntaxError + ";";
             DECLARACION.Rule = TVAR + tId + PDOSPUNTOS + tId
                                 | TVAR + tId + PDOSPUNTOS + tId + IGUAL + expresion
+                                | tConst + tId +  IGUAL + expresion
                                 | tId + PDOSPUNTOS + tId 
                 ;
             // Expresiones (Devuleven un valor)

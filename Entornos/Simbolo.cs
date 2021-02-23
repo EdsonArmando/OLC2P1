@@ -10,12 +10,14 @@ namespace Proyecto1_Compi2.Entornos
         public String id;
         public Object valor;
         public string ambito;
-        public Simbolo(EnumTipoDato tipo, Object valor, String id, String ambito)
+        public string referencia_const;
+        public Simbolo(EnumTipoDato tipo, Object valor, String id, String ambito,String referencia_const)
         {
             this.id = id;
             this.tipo = tipo;
             this.valor = valor;
             this.ambito = ambito;
+            this.referencia_const = referencia_const;
         }
         public Object getValor()
         {
@@ -36,7 +38,8 @@ namespace Proyecto1_Compi2.Entornos
             NULL,
             ERROR,
             OBJETO,
-            FUNCION
+            FUNCION,
+            CONST
         }
     }
 }

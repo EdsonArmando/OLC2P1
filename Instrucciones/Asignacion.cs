@@ -32,7 +32,13 @@ namespace Proyecto1_Compi2.Instrucciones
                 Simbolo sim = ent.obtener(id, ent);
                 if (resultado != null)
                 {
-                    ent.setVariable(id, new Simbolo(sim.tipo, resultado.valor, id, sim.ambito), ent); // Guardo la variable
+                    if (sim.referencia_const.ToLower() == "const")
+                    {
+                        Form1.salidaConsola.AppendText("Una variable CONST no se puede modificar !!!");                       
+                    }
+                    else {
+                        ent.setVariable(id, new Simbolo(sim.tipo, resultado.valor, id, sim.ambito, sim.referencia_const), ent); // Guardo la variable
+                    }                    
                 }
             }
             return new Retornar();
