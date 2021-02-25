@@ -93,6 +93,16 @@ namespace Proyecto1_Compi2.Expresiones
             else if (tipo == Tipo_operacion.IDENTIFICADOR)
             {
                 Simbolo sim = ent.obtener(valor.ToString(),ent);
+                if (sim == null) {
+                    Form1.salidaConsola.AppendText("No se encontro la variable\n");
+                    return null;
+                } else if (sim.tipo == Simbolo.EnumTipoDato.CHAR) {
+                    return new Literal(sim.tipo, sim.valor);
+                }
+                else if (sim.tipo == Simbolo.EnumTipoDato.STRING)
+                {
+                    return new Literal(sim.tipo, sim.valor);
+                }
                 return new Literal(sim.tipo, Double.Parse(sim.valor.ToString()));
             }
             /*

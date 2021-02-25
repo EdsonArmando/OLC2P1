@@ -108,7 +108,7 @@ namespace Proyecto1_Compi2.Analizadores
                     {
                         return new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(5)), 1, 1,"");
                     }
-                    break;
+                    break; 
                 case "if":
                     String tokenSubIf = "";
                     if (actual.ChildNodes.ElementAt(7).ChildNodes.Count > 0) {
@@ -230,12 +230,16 @@ namespace Proyecto1_Compi2.Analizadores
                     if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 4)
                     {
                         if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var") {
-                            instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1,"var"));
+                            instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1, "var"));
                         } else if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "const") {
-                            instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.CONST, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), 1, 1,"const"));
+                            instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.CONST, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), 1, 1, "const"));
                         }
                     }
                     else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 6) {
+                        if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).Term.Name.ToLower()=="listexpr") {
+                            instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), 1, 1, ""));
+                            return null;
+                        }
                         instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), 1, 1, ""));
                     }
                         return null;
@@ -272,20 +276,30 @@ namespace Proyecto1_Compi2.Analizadores
                         return null; 
                     }
                 case "for":
-                    instrucciones.AddLast(new For(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)),expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(6)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(9))));
+                        instrucciones.AddLast(new For(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)),expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(6)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(9))));
                     return null;
                 case "break":
-                    instrucciones.AddLast(new Break());
+                        instrucciones.AddLast(new Break());
                     return null;
                 case "continue":
-                    instrucciones.AddLast(new Continue());
+                        instrucciones.AddLast(new Continue());
                     return null;
                 case "asignacion":
-                    instrucciones.AddLast(new Asignacion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
+                        instrucciones.AddLast(new Asignacion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
                     return null;
                 case "while":
-                    instrucciones.AddLast(new While(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
+                        instrucciones.AddLast(new While(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
                     return null;
+                case "case":
+                    if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 6) {
+                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
+                    } else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 8) {
+                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5))));
+                    }
+                    return null;
+                case "instrcase":
+                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2))));
+                    return null; 
                 default:
                     return null;
             }
@@ -406,6 +420,12 @@ namespace Proyecto1_Compi2.Analizadores
             switch (valor.ToLower()) {
                 case "integer":
                     return Simbolo.EnumTipoDato.INT;
+                case "char":
+                    return Simbolo.EnumTipoDato.CHAR;
+                case "string":
+                    return Simbolo.EnumTipoDato.STRING;
+                case "double":
+                    return Simbolo.EnumTipoDato.DOUBLE;
                 default:
                     return Simbolo.EnumTipoDato.NULL;
             }

@@ -8,7 +8,7 @@ namespace Proyecto1_Compi2.Expresiones
 {
     class Id : Abstracto.Expresion
     {
-        string id;
+        public string id;
         public Id(string id)
         {
             this.id = id;

@@ -30,6 +30,8 @@ namespace Proyecto1_Compi2.Analizadores
             var tUntil = ToTerm("until");
             var tConst = ToTerm("const");
             var tIf = ToTerm("if");
+            var tCase = ToTerm("case");
+            var tOf = ToTerm("of");
             var then = ToTerm("then");
             var tElse = ToTerm("else");
             var tExit = ToTerm("exit");
@@ -87,9 +89,11 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal FUNCION = new NonTerminal("funcion");
             NonTerminal PROCEDURE = new NonTerminal("procedure");
             NonTerminal IF = new NonTerminal("if");
+            NonTerminal CASE = new NonTerminal("case");
             NonTerminal FOR = new NonTerminal("for");
             NonTerminal WHILE = new NonTerminal("while");
             NonTerminal ELSEST = new NonTerminal("else");
+            NonTerminal INSTRCASE = new NonTerminal("instrcase");
             NonTerminal REPEAT = new NonTerminal("repeat");
             NonTerminal ASIGNACION = new NonTerminal("asignacion");
             NonTerminal LLAMADAFUNCION = new NonTerminal("llamadaFuncion");
@@ -141,13 +145,19 @@ namespace Proyecto1_Compi2.Analizadores
             FOR.Rule = tFor + tId + PDOSPUNTOS + IGUAL + expresion + tTo + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA;
             WHILE.Rule = twhile + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA;
             ASIGNACION.Rule = tId + PDOSPUNTOS + IGUAL + expresion ;
+            INSTRCASE.Rule = expresion + PDOSPUNTOS +listInstr;
+            CASE.Rule = tCase + expresion + tOf + listInstr2+ TEND + PTCOMA
+                      | tCase + expresion + tOf + listInstr2 + tElse + listInstr2 + TEND + PTCOMA
+                        ;
             instruccion2.Rule = //Twriteln + PARIZQ + expresion + PARDER + PTCOMA
                                  Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
                                 | returnFuncion
                                 | LLAMADAFUNCION + PTCOMA
                                 | IF
                                 | FOR
+                                | INSTRCASE
                                 | WHILE
+                                | CASE
                                 | REPEAT
                                 | ASIGNACION + PTCOMA
                                 | tBreak + PTCOMA
@@ -161,6 +171,7 @@ namespace Proyecto1_Compi2.Analizadores
             instruccion2.ErrorRule = SyntaxError + ";";
             DECLARACION.Rule = TVAR + tId + PDOSPUNTOS + tId
                                 | TVAR + tId + PDOSPUNTOS + tId + IGUAL + expresion
+                                | TVAR + listExpr + PDOSPUNTOS + tId + IGUAL + expresion
                                 | tConst + tId +  IGUAL + expresion
                                 | tId + PDOSPUNTOS + tId 
                 ;

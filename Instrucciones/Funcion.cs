@@ -37,13 +37,6 @@ namespace Proyecto1_Compi2.Instrucciones
         public override Expresion obtenerValor(Entorno ent)
         {
             Entorno tablaLocal = new Entorno(ent);
-            if (listVarLocales != null)
-            {
-                foreach (Instruccion decla in listVarLocales)
-                {
-                    decla.Ejecutar(tablaLocal, this.id);
-                }
-            }
             if (param_Actuales != null && param_Formales != null)
             {
                 if (param_Actuales.Count == param_Formales.Count)
@@ -59,6 +52,13 @@ namespace Proyecto1_Compi2.Instrucciones
                 {
                     Form1.salidaConsola.AppendText("El numero de parametros no coincide!!!\n");
                     return null;
+                }
+            }
+            if (listVarLocales != null)
+            {
+                foreach (Instruccion decla in listVarLocales)
+                {
+                    decla.Ejecutar(tablaLocal, this.id);
                 }
             }
             foreach (Instruccion instr in listInstrucciones)
