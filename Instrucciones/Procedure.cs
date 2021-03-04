@@ -51,8 +51,22 @@ namespace Proyecto1_Compi2.Instrucciones
                     for (int i = 0; i < param_Formales.Count; i++)
                     {
                         Declaracion temporal = (Declaracion)param_Formales.ElementAt(i);
-                        temporal.setExpresion(param_Actuales.ElementAt(i).obtenerValor(ent));
-                        temporal.Ejecutar(tablaLocal, this.id);
+                        Expresion resultado = param_Actuales.ElementAt(i).obtenerValor(ent);
+                        if (resultado.tipo == Simbolo.EnumTipoDato.ARRAY)
+                        {
+                            Id arrayTemp = new Id("");
+                            if (param_Actuales.ElementAt(i).GetType() == arrayTemp.GetType())
+                            {
+                                arrayTemp = (Id)param_Actuales.ElementAt(i);
+                                Simbolo sim = ent.obtener(arrayTemp.id, ent);
+                                tablaLocal.Insertar(temporal.nombreVariable, sim);
+                            }
+                        }
+                        else
+                        {
+                            temporal.setExpresion(resultado);
+                            temporal.Ejecutar(tablaLocal, this.id);
+                        }
                     }
                 }
                 else {

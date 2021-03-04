@@ -27,10 +27,12 @@ namespace Proyecto1_Compi2.Analizadores
             var TFUNCTION = ToTerm("function");
             var Twriteln = ToTerm("writeln");
             var tRepeat = ToTerm("repeat");
+            var tArray = ToTerm("array");
             var tUntil = ToTerm("until");
             var tConst = ToTerm("const");
             var tIf = ToTerm("if");
             var tCase = ToTerm("case");
+            var tType = ToTerm("type");
             var tOf = ToTerm("of");
             var then = ToTerm("then");
             var tElse = ToTerm("else");
@@ -51,6 +53,7 @@ namespace Proyecto1_Compi2.Analizadores
             var CORIZQ = ToTerm("[");
             var CORDER = ToTerm("]");
             var COMA = ToTerm(",");
+            var tPunto = ToTerm(".");
             var MAS = ToTerm("+");
             var MENOS = ToTerm("-");
             var IGUAL = ToTerm("=");
@@ -95,8 +98,10 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal ELSEST = new NonTerminal("else");
             NonTerminal INSTRCASE = new NonTerminal("instrcase");
             NonTerminal REPEAT = new NonTerminal("repeat");
+            NonTerminal DIMENSIONES = new NonTerminal("dimensiones");
             NonTerminal ASIGNACION = new NonTerminal("asignacion");
             NonTerminal LLAMADAFUNCION = new NonTerminal("llamadaFuncion");
+            NonTerminal ACCESOARRAY = new NonTerminal("accesoarray");
             #endregion
 
             #region Gramatica
@@ -133,7 +138,10 @@ namespace Proyecto1_Compi2.Analizadores
             listExpr.ErrorRule = SyntaxError + ",";
             //Instrucciones dentro de las funciones y Procedimientos
             returnFuncion.Rule = tExit + PARIZQ + expresion + PARDER + PTCOMA
-                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA 
+                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA
+                                | tId + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
+                                | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
+                                | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
                                 ;
             IF.Rule = tIf + expresion + then  + TBEGIN + listInstr2 + TEND + PTCOMA +ELSEST
                 ;
@@ -169,11 +177,20 @@ namespace Proyecto1_Compi2.Analizadores
                 ;
             instruccion.ErrorRule = SyntaxError + ";";
             instruccion2.ErrorRule = SyntaxError + ";";
+            DIMENSIONES.Rule = DIMENSIONES + COMA + expresion + tPunto + tPunto + expresion
+                                | expresion + tPunto + tPunto + expresion
+                                | Empty;
             DECLARACION.Rule = TVAR + tId + PDOSPUNTOS + tId
+                                | TVAR + tId + PDOSPUNTOS + tArray + CORIZQ + DIMENSIONES + CORDER + tOf +  tId
+                                | tType + tId + IGUAL + tArray + CORIZQ + DIMENSIONES + CORDER + tOf + tId
                                 | TVAR + tId + PDOSPUNTOS + tId + IGUAL + expresion
                                 | TVAR + listExpr + PDOSPUNTOS + tId + IGUAL + expresion
                                 | tConst + tId +  IGUAL + expresion
                                 | tId + PDOSPUNTOS + tId 
+                ;
+            ACCESOARRAY.Rule =   tId + CORIZQ + expresion + CORDER
+                                | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER
+                                | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER
                 ;
             // Expresiones (Devuleven un valor)
             expresion.Rule = MENOS + expresion
@@ -189,7 +206,7 @@ namespace Proyecto1_Compi2.Analizadores
                 | expresion + tOr + expresion
                 | expresion + tAnd + expresion
                 | expresion + tDifQ + expresion
-
+                | ACCESOARRAY
                 | NUMERO
                 | tCadena2
                 | tId

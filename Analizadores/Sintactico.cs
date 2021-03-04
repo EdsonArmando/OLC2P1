@@ -13,6 +13,7 @@ namespace Proyecto1_Compi2.Analizadores
 {
     class Sintactico
     {
+        private int fila=0;
         public void analizar(String entrada)
         {
             Singleton.getInstance().limpiarEntorno();
@@ -42,6 +43,26 @@ namespace Proyecto1_Compi2.Analizadores
                 foreach (Abstracto.Instruccion ins in AST) {
                     ins.Ejecutar(ent,"global");
                 }
+            }
+        }
+        private Expresion[,] Dimensiones(ParseTreeNode actual,Expresion[,] valores) {
+            if (actual.ChildNodes.Count == 4)
+            {
+                Expresion Inicio = expresion_numerica(actual.ChildNodes.ElementAt(0));
+                Expresion ValorFin = expresion_numerica(actual.ChildNodes.ElementAt(3));
+                valores[fila, 0] = Inicio;
+                valores[fila, 1] = ValorFin;
+                return valores;
+            }
+            else
+            {
+                Dimensiones(actual.ChildNodes.ElementAt(0),valores);
+                fila += 1;
+                Expresion Inicio = expresion_numerica(actual.ChildNodes.ElementAt(2));
+                Expresion ValorFin = expresion_numerica(actual.ChildNodes.ElementAt(5));
+                valores[fila, 0] = Inicio;
+                valores[fila, 1] = ValorFin;
+                return valores;
             }
         }
         //Recorrer Raiz
@@ -102,6 +123,20 @@ namespace Proyecto1_Compi2.Analizadores
                         else if (actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "const")
                         {
                            return new Declaracion(Simbolo.EnumTipoDato.CONST, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), 1, 1,"const");
+                        }
+                    }
+                    else if (actual.ChildNodes.Count == 9)
+                    {
+                        Expresion[,] nuevo = new Expresion[4, 2];
+                        Dimensiones(actual.ChildNodes.ElementAt(5), nuevo);
+                        fila = 0;
+                        if (actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var")
+                        {
+                            //instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)),nuevo));
+                        }
+                        else if (actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "type")
+                        {
+                            return new Expresiones.Array(actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0], devTipoDato(actual.ChildNodes.ElementAt(8)), nuevo);
                         }
                     }
                     else if (actual.ChildNodes.Count == 6)
@@ -230,13 +265,30 @@ namespace Proyecto1_Compi2.Analizadores
                     if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 4)
                     {
                         if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var") {
-                            instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1, "var"));
+                            Simbolo.EnumTipoDato tipo = devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3));
+                            if (tipo != Simbolo.EnumTipoDato.NULL)
+                            {
+                                instrucciones.AddLast(new Declaracion(tipo, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1, "var"));
+                            }
+                            else {
+                                instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.ARRAY, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1, "var", actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3).ToString().Split(' ')[0].ToLower()));
+                            }
+                            
                         } else if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "const") {
                             instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.CONST, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), 1, 1, "const"));
                         }
+                    } else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 9) {
+                        Expresion[,] nuevo = new Expresion[4,2];
+                        Dimensiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5),nuevo);
+                        fila = 0;
+                        if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var") {
+                            //instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)),nuevo));
+                        } else if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "type") {
+                            instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)), nuevo));
+                        }
                     }
                     else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 6) {
-                        if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).Term.Name.ToLower()=="listexpr") {
+                        if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).Term.Name.ToLower() == "listexpr") {
                             instrucciones.AddLast(new Declaracion(devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), 1, 1, ""));
                             return null;
                         }
@@ -251,7 +303,22 @@ namespace Proyecto1_Compi2.Analizadores
                     if (token.ToLower()=="exit") {
                         instrucciones.AddLast(new Return(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2))));
                     } else{
-                        instrucciones.AddLast(new Asignacion(token,expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
+                        if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 8)
+                        {
+                            instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)),null,null, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(6))));
+                        }
+                        else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 11)
+                        {
+                            instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), null, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(9))));
+                        }
+                        else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 14)
+                        {
+                            instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(12))));
+                        }
+                        else {
+                            instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
+                        }
+                        
                     }       
                     return null;
                 case "repeat":
@@ -376,7 +443,7 @@ namespace Proyecto1_Compi2.Analizadores
                         return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIVISION);
                     default:
                         if (tokenOperador.Equals(">") || tokenOperador.Equals("<") || tokenOperador.Equals(">=") || tokenOperador.Equals("<=") || tokenOperador.Equals("=")
-                         || tokenOperador.Equals("and") || tokenOperador.Equals("or") || tokenOperador.Equals("^") || tokenOperador.Equals("not"))
+                        || tokenOperador.Equals("and") || tokenOperador.Equals("or") || tokenOperador.Equals("^") || tokenOperador.Equals("not"))
                         {
                             return expresion_logica(actual);
                         }
@@ -389,6 +456,27 @@ namespace Proyecto1_Compi2.Analizadores
             else if (actual.ChildNodes.Count == 2)
             {
                 return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(1)), Arimetica.Tipo_operacion.NEGATIVO);
+            }
+            else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 10 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
+            {
+                Expresion[] posiciones = new Expresion[3];
+                posiciones[0] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2));
+                posiciones[1] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5));
+                posiciones[2] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8));
+                return new AccesoArray(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0],posiciones);
+            }
+            else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 7 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
+            {
+                Expresion[] posiciones = new Expresion[3];
+                posiciones[0] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2));
+                posiciones[1] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5));
+                return new AccesoArray(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], posiciones);
+            }
+            else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 4 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
+            {
+                Expresion[] posiciones = new Expresion[3];
+                posiciones[0] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2));
+                return new AccesoArray(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], posiciones);
             }
             else {
                 BnfTerm tipo = actual.ChildNodes.ElementAt(0).Term;
@@ -420,12 +508,18 @@ namespace Proyecto1_Compi2.Analizadores
             switch (valor.ToLower()) {
                 case "integer":
                     return Simbolo.EnumTipoDato.INT;
+                case "type":
+                    return Simbolo.EnumTipoDato.TYPE;
+                case "array":
+                    return Simbolo.EnumTipoDato.ARRAY;
                 case "char":
                     return Simbolo.EnumTipoDato.CHAR;
                 case "string":
                     return Simbolo.EnumTipoDato.STRING;
                 case "double":
                     return Simbolo.EnumTipoDato.DOUBLE;
+                case "real":
+                    return Simbolo.EnumTipoDato.REAL;
                 default:
                     return Simbolo.EnumTipoDato.NULL;
             }

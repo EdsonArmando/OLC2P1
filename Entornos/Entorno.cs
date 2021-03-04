@@ -19,20 +19,20 @@ namespace Proyecto1_Compi2.Entornos
         }
         public bool existeVariable(String id)
         {
-            return this.tablaSimbolos.ContainsKey(id);
+            return this.tablaSimbolos.ContainsKey(id.ToLower());
         }
         //Obtener la variable del entorno
         public Simbolo obtener(string id, Entorno entorno)
         {
             Simbolo sim = null;
-            if (entorno.tablaSimbolos.ContainsKey(id))
+            if (entorno.tablaSimbolos.ContainsKey(id.ToLower()))
             {
-                sim = (Simbolo)entorno.tablaSimbolos[id];
+                sim = (Simbolo)entorno.tablaSimbolos[id.ToLower()];
                 return sim;
             }
             else if (entorno.anterior != null)
             {
-                sim = obtener(id,entorno.anterior);
+                sim = obtener(id.ToLower(),entorno.anterior);
                 return sim;
             }
             else {
@@ -50,7 +50,7 @@ namespace Proyecto1_Compi2.Entornos
             }
         }
         public void setVariable(string nombre, Simbolo valor,Entorno ent) {
-            if (this.tablaSimbolos.ContainsKey(nombre))
+            if (ent.tablaSimbolos.ContainsKey(nombre.ToLower()))
             {
                 ent.tablaSimbolos.Remove(nombre);
                 ent.tablaSimbolos.Add(nombre, valor);
@@ -58,19 +58,19 @@ namespace Proyecto1_Compi2.Entornos
             }
             else if (ent.anterior != null)
             {
-                setVariable(nombre,valor,ent.anterior);
+                setVariable(nombre.ToLower(),valor,ent.anterior);
                 return;
             }
         }
         public void Insertar(string nombre, Simbolo valor)
         {
-            if (this.tablaSimbolos.ContainsKey(nombre))
+            if (this.tablaSimbolos.ContainsKey(nombre.ToLower()))
             {
                 Form1.salidaConsola.AppendText("La variable '" + nombre + "' YA existe");
 
                 return;
             }
-            this.tablaSimbolos.Add(nombre, valor);
+            this.tablaSimbolos.Add(nombre.ToLower(), valor);
 
         }
     }

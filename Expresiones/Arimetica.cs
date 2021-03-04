@@ -103,6 +103,10 @@ namespace Proyecto1_Compi2.Expresiones
                 {
                     return new Literal(sim.tipo, sim.valor);
                 }
+                else if (sim.tipo == Simbolo.EnumTipoDato.ARRAY)
+                {
+                    return new Literal(sim.tipo,sim.valor, sim.id, sim.ambito, sim.referencia_const, sim.posicion_X, sim.posicion_Y, sim.posicion_Z,sim.tipoItem);
+                }
                 return new Literal(sim.tipo, Double.Parse(sim.valor.ToString()));
             }
             /*

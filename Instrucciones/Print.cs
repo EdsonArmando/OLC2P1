@@ -23,9 +23,10 @@ namespace Proyecto1_Compi2.Instrucciones
                 Expresion val = exp.obtenerValor(ent);
                 if (val != null)
                 {
-                    Form1.salidaConsola.AppendText(val.valor.ToString() + "\n");
+                    Form1.salidaConsola.AppendText(val.valor.ToString() + " ");
                 }
             }
+            Form1.salidaConsola.AppendText("\n");
             return new Retornar();
         }
     }
