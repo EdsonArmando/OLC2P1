@@ -16,6 +16,7 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public Retornar Ejecutar(Entorno ent, string Ambito)
         {
+
             throw new NotImplementedException();
         }
     }
