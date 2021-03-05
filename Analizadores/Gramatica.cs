@@ -27,6 +27,7 @@ namespace Proyecto1_Compi2.Analizadores
             var TFUNCTION = ToTerm("function");
             var Twriteln = ToTerm("writeln");
             var tRepeat = ToTerm("repeat");
+            var tObject = ToTerm("object");
             var tArray = ToTerm("array");
             var tUntil = ToTerm("until");
             var tConst = ToTerm("const");
@@ -97,7 +98,9 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal WHILE = new NonTerminal("while");
             NonTerminal ELSEST = new NonTerminal("else");
             NonTerminal INSTRCASE = new NonTerminal("instrcase");
+            NonTerminal TYPES = new NonTerminal("types_object");
             NonTerminal REPEAT = new NonTerminal("repeat");
+            NonTerminal VALORES = new NonTerminal("valores");
             NonTerminal DIMENSIONES = new NonTerminal("dimensiones");
             NonTerminal ASIGNACION = new NonTerminal("asignacion");
             NonTerminal LLAMADAFUNCION = new NonTerminal("llamadaFuncion");
@@ -112,6 +115,7 @@ namespace Proyecto1_Compi2.Analizadores
             //Instrucciones que acepta el lenguaje
             instruccion.Rule = DECLARACION + PTCOMA
                                 | FUNCION
+                                | TYPES + PTCOMA
                                 | returnFuncion
                                 | PROCEDURE
                                 | LLAMADAFUNCION + PTCOMA
@@ -180,13 +184,15 @@ namespace Proyecto1_Compi2.Analizadores
             DIMENSIONES.Rule = DIMENSIONES + COMA + expresion + tPunto + tPunto + expresion
                                 | expresion + tPunto + tPunto + expresion
                                 | Empty;
+            TYPES.Rule =  tType + tId + IGUAL + tObject + listInstr + TEND;
             DECLARACION.Rule = TVAR + tId + PDOSPUNTOS + tId
-                                | TVAR + tId + PDOSPUNTOS + tArray + CORIZQ + DIMENSIONES + CORDER + tOf +  tId
+                                | TVAR + tId + PDOSPUNTOS + tArray + CORIZQ + DIMENSIONES + CORDER + tOf + tId
                                 | tType + tId + IGUAL + tArray + CORIZQ + DIMENSIONES + CORDER + tOf + tId
                                 | TVAR + tId + PDOSPUNTOS + tId + IGUAL + expresion
                                 | TVAR + listExpr + PDOSPUNTOS + tId + IGUAL + expresion
-                                | tConst + tId +  IGUAL + expresion
-                                | tId + PDOSPUNTOS + tId 
+                                | TVAR + listExpr + PDOSPUNTOS + tId 
+                                | tConst + tId + IGUAL + expresion
+                                | tId + PDOSPUNTOS + tId
                 ;
             ACCESOARRAY.Rule =   tId + CORIZQ + expresion + CORDER
                                 | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER

@@ -217,6 +217,9 @@ namespace Proyecto1_Compi2.Analizadores
                         instrucciones.AddLast(temp);
                         return temp;
                     }
+                case "types_object":
+                    instrucciones.AddLast(new Type_Object(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
+                    return null;
                 case "procedure":
                     ParseTreeNode procedure = actual.ChildNodes.ElementAt(0);
                     String ProcedureHija;
@@ -267,19 +270,26 @@ namespace Proyecto1_Compi2.Analizadores
                         if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var") {
                             Simbolo.EnumTipoDato tipo = devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3));
                             if (tipo != Simbolo.EnumTipoDato.NULL)
-                            {
-                                instrucciones.AddLast(new Declaracion(tipo, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1, "var"));
+                            {                                
+                                instrucciones.AddLast(new Declaracion(tipo, devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), null, 1, 1, "var"));
                             }
                             else {
-                                instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.ARRAY, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], null, 1, 1, "var", actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3).ToString().Split(' ')[0].ToLower()));
+                                if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).Term.Name == "listexpr")
+                                {
+                                    instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.ARRAY, devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), null, 1, 1, "var", actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3).ToString().Split(' ')[0].ToLower()));
+                                }
+                                else {
+                                    instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.ARRAY, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0].ToLower(), null, 1, 1, "var", actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3).ToString().Split(' ')[0].ToLower()));
+                                }                                
                             }
-                            
+
                         } else if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "const") {
                             instrucciones.AddLast(new Declaracion(Simbolo.EnumTipoDato.CONST, actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), 1, 1, "const"));
                         }
-                    } else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 9) {
-                        Expresion[,] nuevo = new Expresion[4,2];
-                        Dimensiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5),nuevo);
+                    } 
+                    else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 9) {
+                        Expresion[,] nuevo = new Expresion[4, 2];
+                        Dimensiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5), nuevo);
                         fila = 0;
                         if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var") {
                             //instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)),nuevo));

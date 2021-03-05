@@ -43,7 +43,17 @@ namespace Proyecto1_Compi2.Instrucciones
             this.columna = columna;
             this.esReferencia_const = esReferencia_const;
         }
-        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna, String esReferencia_const,String nameArray)
+        public Declaracion(Simbolo.EnumTipoDato tipo, LinkedList<Expresion> valores, Expresion expresion, int fila, int columna, String esReferencia_const,String nameArray)
+        {
+            this.tipoVariable = tipo;
+            this.variables = valores;
+            this.expresion = expresion;
+            this.fila = fila;
+            this.columna = columna;
+            this.esReferencia_const = esReferencia_const;
+            this.nameArra = nameArray;
+        }
+        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna, String esReferencia_const, String nameArray)
         {
             this.tipoVariable = tipo;
             this.nombreVariable = nombre;
@@ -69,9 +79,33 @@ namespace Proyecto1_Compi2.Instrucciones
                     ent.Insertar(this.nombreVariable, new Simbolo(this.tipoVariable, resultado.valor, nombreVariable, ambito, esReferencia_const)); // Guardo la variable
                 }                
             } else if (variables != null) {
-                Expresion resultado = expresion.obtenerValor(ent);
+                
                 foreach (Id expr in variables) {
-                    ent.Insertar(expr.id.ToString(), new Simbolo(this.tipoVariable, resultado.valor, nombreVariable, ambito, esReferencia_const)); // Guardo la variable        
+                    if (expresion == null)
+                    {
+                        if (nameArra != null)
+                        {
+                            Simbolo sim = ent.obtener(nameArra, ent);
+                            ent.Insertar(expr.id.ToString(), sim); // Guardo la variable
+                        }
+                        else {
+                            ent.Insertar(expr.id.ToString(), new Simbolo(this.tipoVariable, "", expr.id.ToString(), ambito, esReferencia_const)); // Guardo la variable 
+                        }
+                        
+                    }
+                    else {
+                        Expresion resultado = expresion.obtenerValor(ent);
+                        if (resultado.tipo == Simbolo.EnumTipoDato.ARRAY)
+                        {
+                            Literal temp = (Literal)resultado;
+                            ent.Insertar(expr.id.ToString(), new Simbolo(temp.tipo, temp.valor, temp.id, temp.ambito, temp.referencia_const, temp.posicion_X, temp.posicion_Y, temp.posicion_Z, temp.tipoItem)); // Guardo la variable
+                        }
+                        else
+                        {
+                            ent.Insertar(expr.id.ToString(), new Simbolo(this.tipoVariable, resultado.valor, expr.id.ToString(), ambito, esReferencia_const)); // Guardo la variable                         
+                        }
+                    }
+                      
                 }
             }
             else
