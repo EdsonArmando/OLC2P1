@@ -55,11 +55,17 @@ namespace Proyecto1_Compi2.Instrucciones
                         if (resultado.tipo == Simbolo.EnumTipoDato.ARRAY)
                         {
                             Id arrayTemp = new Id("");
+                            Expresion result = param_Actuales.ElementAt(i).obtenerValor(ent);
                             if (param_Actuales.ElementAt(i).GetType() == arrayTemp.GetType())
                             {
                                 arrayTemp = (Id)param_Actuales.ElementAt(i);
                                 Simbolo sim = ent.obtener(arrayTemp.id, ent);
                                 tablaLocal.Insertar(temporal.nombreVariable, sim);
+                            }
+                            else if (result.tipo == Simbolo.EnumTipoDato.ARRAY)
+                            {
+                                Literal tem = (Literal)result;
+                                tablaLocal.Insertar(temporal.nombreVariable, new Simbolo(tem.tipo, tem.valor, tem.id, tem.ambito, tem.referencia_const, tem.posicion_X, tem.posicion_Y, tem.posicion_Z, tem.tipoItem));
                             }
                         }
                         else

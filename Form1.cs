@@ -26,5 +26,45 @@ namespace Proyecto1_Compi2
         {
 
         }
+
+        private void richTextBox1_TextChanged_1(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Font = richTextBox1.Font;
+            richTextBox1.Select();
+            AddLineNumbers();
+        }
+        private void richTextBox1_VScroll(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Text = "";
+            AddLineNumbers();
+            LineNumberTextBox.Invalidate();
+        }
+
+        private void richTextBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            richTextBox1.Select();
+            LineNumberTextBox.DeselectAll();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            AddLineNumbers();
+        }
+
+        private void richTextBox1_FontChanged(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Font = richTextBox1.Font;
+            richTextBox1.Select();
+            AddLineNumbers();
+        }
+
+        private void richTextBox1_SelectionChanged(object sender, EventArgs e)
+        {
+            Point pt = richTextBox1.GetPositionFromCharIndex(richTextBox1.SelectionStart);
+            if (pt.X == 1)
+            {
+                AddLineNumbers();
+            }
+        }
     }
 }

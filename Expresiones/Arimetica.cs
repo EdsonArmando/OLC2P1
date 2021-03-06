@@ -78,7 +78,7 @@ namespace Proyecto1_Compi2.Expresiones
                     return new Literal(Simbolo.EnumTipoDato.DOUBLE, (double)izquierda.valor + (double)derecha.valor);
                 }
                 else {
-                    
+
                     return new Literal(Simbolo.EnumTipoDato.STRING, izquierda.valor.ToString() + derecha.valor.ToString());
                 }
             }
@@ -92,11 +92,17 @@ namespace Proyecto1_Compi2.Expresiones
             }
             else if (tipo == Tipo_operacion.IDENTIFICADOR)
             {
-                Simbolo sim = ent.obtener(valor.ToString(),ent);
+                Simbolo sim = ent.obtener(valor.ToString(), ent);
                 if (sim == null) {
                     Form1.salidaConsola.AppendText("No se encontro la variable\n");
                     return null;
                 } else if (sim.tipo == Simbolo.EnumTipoDato.CHAR) {
+                    return new Literal(sim.tipo, sim.valor);
+                } else if (sim.tipo == Simbolo.EnumTipoDato.OBJETO_TYPE) {
+                    return new Literal(sim.tipo, sim.valor);
+                }
+                else if (sim.tipo == Simbolo.EnumTipoDato.TYPE)
+                {
                     return new Literal(sim.tipo, sim.valor);
                 }
                 else if (sim.tipo == Simbolo.EnumTipoDato.STRING)
@@ -105,9 +111,15 @@ namespace Proyecto1_Compi2.Expresiones
                 }
                 else if (sim.tipo == Simbolo.EnumTipoDato.ARRAY)
                 {
-                    return new Literal(sim.tipo,sim.valor, sim.id, sim.ambito, sim.referencia_const, sim.posicion_X, sim.posicion_Y, sim.posicion_Z,sim.tipoItem);
+                    return new Literal(sim.tipo, sim.valor, sim.id, sim.ambito, sim.referencia_const, sim.posicion_X, sim.posicion_Y, sim.posicion_Z, sim.tipoItem);
                 }
-                return new Literal(sim.tipo, Double.Parse(sim.valor.ToString()));
+                if (sim.valor != null && sim.valor.ToString() != "")
+                {
+                    return new Literal(sim.tipo, Double.Parse(sim.valor.ToString()));
+                }
+                else {
+                    return new Literal(sim.tipo, 0);
+                }              
             }
             /*
              * 

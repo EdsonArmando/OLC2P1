@@ -85,8 +85,16 @@ namespace Proyecto1_Compi2.Instrucciones
                     {
                         if (nameArra != null)
                         {
-                            Simbolo sim = ent.obtener(nameArra, ent);
-                            ent.Insertar(expr.id.ToString(), sim); // Guardo la variable
+                            if (ent.existType(nameArra,ent))
+                            {
+                                Instancia_Type temp = new Instancia_Type(expr.id.ToString().ToLower(), nameArra);
+                                temp.Ejecutar(ent, ambito);
+                            }
+                            else
+                            {
+                                Simbolo sim = ent.obtener(nameArra, ent);
+                                ent.Insertar(expr.id.ToString(), sim); // Guardo la variable
+                            }
                         }
                         else {
                             ent.Insertar(expr.id.ToString(), new Simbolo(this.tipoVariable, "", expr.id.ToString(), ambito, esReferencia_const)); // Guardo la variable 
@@ -112,8 +120,17 @@ namespace Proyecto1_Compi2.Instrucciones
             {
                 if (nameArra != null)
                 {
-                    Simbolo sim = ent.obtener(nameArra, ent);
-                    ent.Insertar(this.nombreVariable,sim ); // Guardo la variable
+                    //Verifico si es un type o un ARRAY
+                    if (ent.existType(nameArra,ent))
+                    {
+                        //Creo la Instancia del Type
+                        Instancia_Type temp = new Instancia_Type(nombreVariable,nameArra);
+                        temp.Ejecutar(ent,ambito);
+                    }
+                    else {
+                        Simbolo sim = ent.obtener(nameArra, ent);
+                        ent.Insertar(this.nombreVariable, sim); // Guardo la variable
+                    }                    
                 }
                 else {
                     ent.Insertar(this.nombreVariable, new Simbolo(tipoVariable, null, nombreVariable, ambito, esReferencia_const)); // Guardo la variable

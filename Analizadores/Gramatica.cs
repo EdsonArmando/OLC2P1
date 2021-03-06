@@ -85,6 +85,7 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal returnFuncion = new NonTerminal("returnFuncion_asignacion");
             NonTerminal listInstr = new NonTerminal("listInstr");
             NonTerminal listExpr = new NonTerminal("listExpr");
+            NonTerminal listId = new NonTerminal("listid");
             NonTerminal listInstr2 = new NonTerminal("listInstr2");
             NonTerminal listParam = new NonTerminal("listParam");
             NonTerminal listFuncion = new NonTerminal("listFuncion");
@@ -100,7 +101,7 @@ namespace Proyecto1_Compi2.Analizadores
             NonTerminal INSTRCASE = new NonTerminal("instrcase");
             NonTerminal TYPES = new NonTerminal("types_object");
             NonTerminal REPEAT = new NonTerminal("repeat");
-            NonTerminal VALORES = new NonTerminal("valores");
+            NonTerminal ASIGNACIONOBJETO = new NonTerminal("asignacionob");
             NonTerminal DIMENSIONES = new NonTerminal("dimensiones");
             NonTerminal ASIGNACION = new NonTerminal("asignacion");
             NonTerminal LLAMADAFUNCION = new NonTerminal("llamadaFuncion");
@@ -117,7 +118,8 @@ namespace Proyecto1_Compi2.Analizadores
                                 | FUNCION
                                 | TYPES + PTCOMA
                                 | returnFuncion
-                                | PROCEDURE
+                                | listId + PDOSPUNTOS + IGUAL + expresion + PTCOMA
+                                | PROCEDURE                               
                                 | LLAMADAFUNCION + PTCOMA
                                 | Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
             ;
@@ -131,6 +133,8 @@ namespace Proyecto1_Compi2.Analizadores
                             + listInstr
                             + TBEGIN + listInstr2 + TEND + PTCOMA
                 ;
+            ASIGNACIONOBJETO.Rule = expresion + tPunto + expresion
+                                   ;                                   
             listFuncion.Rule = MakePlusRule(listFuncion, FUNCION);
             listInstr2.Rule = MakePlusRule(listInstr2, instruccion2)
                               | Empty;
@@ -140,9 +144,12 @@ namespace Proyecto1_Compi2.Analizadores
             listExpr.Rule = MakePlusRule(listExpr, COMA, expresion)
                          | Empty;
             listExpr.ErrorRule = SyntaxError + ",";
+            listId.Rule = MakePlusRule(listId, tPunto, tId)
+                         | Empty;
+            listId.ErrorRule = SyntaxError + ".";
             //Instrucciones dentro de las funciones y Procedimientos
             returnFuncion.Rule = tExit + PARIZQ + expresion + PARDER + PTCOMA
-                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA
+                                | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA                                       
                                 | tId + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
                                 | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
                                 | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
@@ -216,6 +223,7 @@ namespace Proyecto1_Compi2.Analizadores
                 | NUMERO
                 | tCadena2
                 | tId
+                | ASIGNACIONOBJETO
                 | tCadena
                 | LLAMADAFUNCION
                 | PARIZQ + expresion + PARDER;

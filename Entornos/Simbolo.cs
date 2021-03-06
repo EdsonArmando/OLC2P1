@@ -60,7 +60,7 @@ namespace Proyecto1_Compi2.Entornos
             NULL,
             TYPE,
             ERROR,
-            OBJETO,
+            OBJETO_TYPE,
             FUNCION,
             ARRAY,
             REAL,

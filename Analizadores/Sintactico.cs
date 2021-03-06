@@ -26,7 +26,7 @@ namespace Proyecto1_Compi2.Analizadores
             {
                 for (int i = 0; i < arbol.ParserMessages.Count(); i++)
                 {
-                    Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString()+ " Fila: " + arbol.ParserMessages.ElementAt(i).Location.Line
+                    Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString()+ " Fila: " + (arbol.ParserMessages.ElementAt(i).Location.Line + 1)
                         + " Columna: " + arbol.ParserMessages.ElementAt(i).Location.Column
                         + "\n");
                 }
@@ -90,10 +90,6 @@ namespace Proyecto1_Compi2.Analizadores
         private LinkedList<Abstracto.Expresion> listaExpresiones(ParseTreeNode actual)
         {
 
-            return null;
-        }
-        private LinkedList<Abstracto.Instruccion> listInstr2(ParseTreeNode actual)
-        {
             return null;
         }
         private LinkedList<Abstracto.Instruccion> listInstr2Temp(ParseTreeNode actual)
@@ -292,7 +288,7 @@ namespace Proyecto1_Compi2.Analizadores
                         Dimensiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5), nuevo);
                         fila = 0;
                         if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var") {
-                            //instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)),nuevo));
+                            instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)),nuevo));
                         } else if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "type") {
                             instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)), nuevo));
                         }
@@ -376,10 +372,32 @@ namespace Proyecto1_Compi2.Analizadores
                     return null;
                 case "instrcase":
                         instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0)),Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2))));
-                    return null; 
+                    return null;
+                case "listid":
+                        instrucciones.AddLast(new AsignacionTypeObjcet(listIds(actual.ChildNodes.ElementAt(0)),expresion_numerica(actual.ChildNodes.ElementAt(3))));
+                    return null;
                 default:
                     return null;
             }
+        }
+        //Lista de IDs
+        private LinkedList<String> listIds(ParseTreeNode actual)
+        {
+            LinkedList<String> parametros = new LinkedList<string>();
+            for (int i = 0; i < actual.ChildNodes.Count; i++)
+            {
+                ParseTreeNode temp = actual.ChildNodes.ElementAt(i);
+                if (temp.ChildNodes.Count == 2)
+                {
+                    parametros.AddLast(temp.ChildNodes.ElementAt(1).ToString().Split(' ')[0]);
+                }
+                else
+                {
+                    parametros.AddLast(temp.ToString().Split(' ')[0]);
+                }
+
+            }
+            return parametros;
         }
         /*
             Resolviendo expresiones Arimeticas
@@ -443,6 +461,8 @@ namespace Proyecto1_Compi2.Analizadores
                 {
                     case "+":
                         return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.SUMA);
+                    case ".":
+                        return new AccesoObject(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)));
                     case "pow":
                         return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.POTENCIA);
                     case "-":
@@ -490,24 +510,31 @@ namespace Proyecto1_Compi2.Analizadores
             }
             else {
                 BnfTerm tipo = actual.ChildNodes.ElementAt(0).Term;
-                if (tipo.ErrorAlias == "ID")
+                if (tipo.Name == "ID")
                 {
                     string tokenValor = actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0];
                     return new Arimetica(tokenValor, Arimetica.Tipo_operacion.IDENTIFICADOR);
                 }
-                else if (tipo.ErrorAlias == "cadena")
+                else if (tipo.Name == "cadena")
                 {
                     String tokenValor = actual.ChildNodes.ElementAt(0).ToString();
                     return new Arimetica(tokenValor.Remove(tokenValor.ToCharArray().Length - 9, 9), Arimetica.Tipo_operacion.CADENA);
                 }
-                else if (tipo.ErrorAlias == "cadena2")
+                else if (tipo.Name == "asignacionob")
+                {
+                    return expresion_numerica(actual.ChildNodes.ElementAt(0));
+                }
+                else if (tipo.Name == "cadena2")
                 {
                     String tokenValor = actual.ChildNodes.ElementAt(0).ToString();
                     return new Arimetica(tokenValor.Remove(tokenValor.ToCharArray().Length - 10, 10), Arimetica.Tipo_operacion.CADENA);
-                } else if (tipo.Name.ToLower() == "llamadafuncion") {
+                }
+                else if (tipo.Name.ToLower() == "llamadafuncion")
+                {
                     return new LlamadaFuncion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), 1, 1);
                 }
-                else {
+                else
+                {
                     return new Arimetica(Double.Parse(actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0]));
                 }
                 

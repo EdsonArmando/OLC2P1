@@ -84,5 +84,10 @@ namespace Proyecto1_Compi2.Expresiones
             }
             return new Retornar();
         }
+
+        public static implicit operator Array(Expresion v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
