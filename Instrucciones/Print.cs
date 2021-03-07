@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Proyecto1_Compi2.Instrucciones
             this.columna = columna;
         }
 
-        public Retornar Ejecutar(Entorno ent,String ambito)
+        public Retornar Ejecutar(Entorno ent,String ambito, Sintactico AST)
         {
             foreach (Abstracto.Expresion exp in valores)
             {

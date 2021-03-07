@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using Proyecto1_Compi2.Expresiones;
 using System;
@@ -63,7 +64,7 @@ namespace Proyecto1_Compi2.Instrucciones
             this.esReferencia_const = esReferencia_const;
             this.nameArra = nameArray;
         }
-        public Retornar Ejecutar(Entorno ent,String ambito)
+        public Retornar Ejecutar(Entorno ent,String ambito, Sintactico AST)
         {
 
             //Resuelvo la expresión que le quiero asignar a la variable
@@ -85,10 +86,12 @@ namespace Proyecto1_Compi2.Instrucciones
                     {
                         if (nameArra != null)
                         {
-                            if (ent.existType(nameArra,ent))
+                            if (Singleton.getInstance().existType(nameArra))
                             {
-                                Instancia_Type temp = new Instancia_Type(expr.id.ToString().ToLower(), nameArra);
-                                temp.Ejecutar(ent, ambito);
+                                //Instancia_Type temp = new Instancia_Type(expr.id.ToString().ToLower(), nameArra);
+                                //temp.Ejecutar(ent, ambito,AST);
+                                Type_Object temp2 = Singleton.getInstance().getType(nameArra);
+                                ent.Insertar(expr.id.ToString().ToLower(), new Simbolo(Simbolo.EnumTipoDato.OBJETO_TYPE, temp2, nameArra, ambito, ""));
                             }
                             else
                             {
@@ -121,11 +124,13 @@ namespace Proyecto1_Compi2.Instrucciones
                 if (nameArra != null)
                 {
                     //Verifico si es un type o un ARRAY
-                    if (ent.existType(nameArra,ent))
+                    if (Singleton.getInstance().existType(nameArra))
                     {
+                        Type_Object temp = Singleton.getInstance().getType(nameArra);
+                        ent.Insertar(nombreVariable, new Simbolo(Simbolo.EnumTipoDato.OBJETO_TYPE, temp, nameArra, ambito, ""));
                         //Creo la Instancia del Type
-                        Instancia_Type temp = new Instancia_Type(nombreVariable,nameArra);
-                        temp.Ejecutar(ent,ambito);
+                        //Instancia_Type temp = new Instancia_Type(nombreVariable,nameArra);
+                        //temp.Ejecutar(ent,ambito, AST);
                     }
                     else {
                         Simbolo sim = ent.obtener(nameArra, ent);

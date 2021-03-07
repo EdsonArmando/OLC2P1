@@ -14,8 +14,10 @@ namespace Proyecto1_Compi2.Analizadores
     class Sintactico
     {
         private int fila=0;
+        private LinkedList<Type_Object> types = new LinkedList<Type_Object>();
         public void analizar(String entrada)
         {
+            types.Clear();
             Singleton.getInstance().limpiarEntorno();
             Gramatica gramatica = new Gramatica();
             LanguageData lenguaje = new LanguageData(gramatica);
@@ -41,7 +43,7 @@ namespace Proyecto1_Compi2.Analizadores
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
                 foreach (Abstracto.Instruccion ins in AST) {
-                    ins.Ejecutar(ent,"global");
+                    ins.Ejecutar(ent,"global",this);
                 }
             }
         }
@@ -214,7 +216,7 @@ namespace Proyecto1_Compi2.Analizadores
                         return temp;
                     }
                 case "types_object":
-                    instrucciones.AddLast(new Type_Object(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
+                    Singleton.getInstance().insertType(new Type_Object(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
                     return null;
                 case "procedure":
                     ParseTreeNode procedure = actual.ChildNodes.ElementAt(0);
@@ -399,6 +401,7 @@ namespace Proyecto1_Compi2.Analizadores
             }
             return parametros;
         }
+        
         /*
             Resolviendo expresiones Arimeticas
         */

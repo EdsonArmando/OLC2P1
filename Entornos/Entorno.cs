@@ -9,56 +9,14 @@ namespace Proyecto1_Compi2.Entornos
     class Entorno
     {
         public Hashtable tablaSimbolos;
-        public LinkedList<Abstracto.Instruccion> listFunciones;
-        public LinkedList<Abstracto.Instruccion> List_types;
         public Entorno anterior;
         public Entorno(Entorno entornoAnterior) : base()
         {
             this.tablaSimbolos = new Hashtable();
-            this.List_types = new LinkedList<Abstracto.Instruccion>();
             this.anterior = entornoAnterior;
             // llamada del constructor de la clase padre
         }
         //Insertar Types
-        public void insertType(String nombre, Type_Object typ)
-        {
-            this.List_types.AddLast(typ);
-        }
-        public Type_Object obtenerType(String nombre, Entorno ent)
-        {
-            Type_Object temp = null;
-            foreach (Type_Object item in ent.List_types)
-            {
-                if (item.nombreType.ToLower().Equals(nombre.ToLower()))
-                {
-                    temp = item;
-                    return temp;
-                }              
-            }
-            if (ent.anterior != null) {
-                temp = obtenerType(nombre,ent.anterior);
-                return temp;
-            }
-            return null;
-        }
-        //Existe Type
-        public bool existType(String nombre, Entorno ent) {
-            bool valor = false;
-            foreach (Type_Object item in ent.List_types)
-            {
-                if (item.nombreType.ToLower().Equals(nombre.ToLower()))
-                {
-                    valor = true;
-                    return valor;
-                }
-
-            }
-            if (ent.anterior != null) {
-                valor = existType(nombre,ent.anterior);
-                return valor;
-            }
-            return false;
-        }
         public bool existeVariable(String id)
         {
             return this.tablaSimbolos.ContainsKey(id.ToLower());

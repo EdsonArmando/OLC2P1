@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using Proyecto1_Compi2.Expresiones;
 using System;
@@ -15,10 +16,10 @@ namespace Proyecto1_Compi2.Instrucciones
             this.listId = listId;
             this.valor = valor;
         }
-        public Retornar Ejecutar(Entorno ent, string Ambito)
+        public Retornar Ejecutar(Entorno ent, string Ambito,Sintactico AST)
         {
             Expresion resultado = valor.obtenerValor(ent);
-            Instancia_Type temp = new Instancia_Type("", "");
+            Type_Object temp = new Type_Object("",null);
             Simbolo sim=null;
             foreach (String id in listId) {
                 if (temp.nombreType == "")
@@ -33,7 +34,10 @@ namespace Proyecto1_Compi2.Instrucciones
                 }
                 if (sim != null && sim.valor.GetType() == temp.GetType())
                 {
-                    temp = (Instancia_Type)sim.valor;
+                    temp = (Type_Object)sim.valor;
+                    if (temp.entObjeto.tablaSimbolos.Count == 0) {
+                        temp.Ejecutar(null,"",AST);
+                    }
                 }
                 else {
                     if (resultado.tipo == Simbolo.EnumTipoDato.ARRAY)

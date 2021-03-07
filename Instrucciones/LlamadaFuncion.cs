@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Proyecto1_Compi2.Instrucciones
             this.fila = fila;
             this.columna = columna;
         }
-        public Retornar Ejecutar(Entorno ent,String ambito)
+        public Retornar Ejecutar(Entorno ent,String ambito, Sintactico AST)
         {
             PlantillaFuncion f = (PlantillaFuncion)Singleton.getInstance().getFuncion(this.id.ToLower());
             if (f != null)

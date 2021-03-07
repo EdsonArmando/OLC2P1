@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Proyecto1_Compi2.Analizadores;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using static Proyecto1_Compi2.Entornos.Simbolo;

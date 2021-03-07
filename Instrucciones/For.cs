@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using Proyecto1_Compi2.Expresiones;
 using System;
@@ -19,7 +20,7 @@ namespace Proyecto1_Compi2.Instrucciones
             this.valorFin = valorFin;
             listaInstrucciones = listaInstr;
         }
-        public Retornar Ejecutar(Entorno ent, string Ambito)
+        public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
             bool seguirFor = true;
             Simbolo temp = ent.obtener(id,ent); 
@@ -32,7 +33,7 @@ namespace Proyecto1_Compi2.Instrucciones
             {
                 foreach (Instruccion ins in listaInstrucciones)
                 {
-                    Retornar contenido = ins.Ejecutar(ent,Ambito);
+                    Retornar contenido = ins.Ejecutar(ent,Ambito,AST);
                     if (contenido.isBreak)
                     {
                         seguirFor = false;
@@ -43,7 +44,7 @@ namespace Proyecto1_Compi2.Instrucciones
                         break;
                     }
                 }
-                aumento.Ejecutar(ent,Ambito);
+                aumento.Ejecutar(ent,Ambito,AST);
             }
             return new Retornar();
         }

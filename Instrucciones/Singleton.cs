@@ -9,9 +9,11 @@ namespace Proyecto1_Compi2.Instrucciones
     {
         private static Singleton singleton;
         public Hashtable funciones;
+        public LinkedList<Type_Object> types;
         private Singleton()
         {
             funciones = new Hashtable();
+            types = new LinkedList<Type_Object>();
             /*Meter todos mis metodos propios del lenguaje*/
         }
         public static Singleton getInstance()
@@ -25,6 +27,31 @@ namespace Proyecto1_Compi2.Instrucciones
         public void limpiarEntorno()
         {
             funciones.Clear();
+            types.Clear();
+        }
+        public bool existType(String nombre)
+        {
+            foreach (Type_Object ty in types)
+            {
+                if (ty.nombreType.ToLower() == nombre.ToLower())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void insertType(Type_Object temp)
+        {
+            types.AddLast(temp);
+        }
+        public Type_Object getType(string id)
+        {
+            foreach (Type_Object ty in types)
+            {
+                Type_Object newType = (Type_Object)ty.Clone();
+                return newType;
+            }
+            return null;
         }
         public bool putFuncion(Abstracto.Instruccion funcion, String id)
         {

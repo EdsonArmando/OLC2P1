@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,11 @@ namespace Proyecto1_Compi2.Instrucciones
             this.nombreType = nombreType;
             this.entObjeto = new Entorno(null);
         }
-        public Retornar Ejecutar(Entorno ent, string Ambito)
+        public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
-            entObjeto.anterior = ent;
-            Type_Object typeObj = ent.obtenerType(nombreType,ent);
+            //entObjeto.anterior = ent;
+            Type_Object typeObj = Singleton.getInstance().getType(nombreType);
+            //this.entObjeto = typeObj.entObj;
             if (typeObj == null)
             {
                 Form1.salidaConsola.AppendText("El type no existe");
@@ -28,12 +30,8 @@ namespace Proyecto1_Compi2.Instrucciones
             }
             else
             {
-                foreach (Instruccion item in typeObj.listaVariables)
-                {
-                    item.Ejecutar(entObjeto,Ambito);
-                }
-            }
-            ent.Insertar(nombreObjeto, new Simbolo(Simbolo.EnumTipoDato.OBJETO_TYPE, this, nombreObjeto,Ambito,""));
+                ent.Insertar(nombreObjeto, new Simbolo(Simbolo.EnumTipoDato.OBJETO_TYPE, this, nombreObjeto, Ambito, ""));
+            }            
             return new Retornar();
         }
     }

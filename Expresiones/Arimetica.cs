@@ -1,5 +1,7 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
+using Proyecto1_Compi2.Instrucciones;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -93,6 +95,9 @@ namespace Proyecto1_Compi2.Expresiones
             else if (tipo == Tipo_operacion.IDENTIFICADOR)
             {
                 Simbolo sim = ent.obtener(valor.ToString(), ent);
+                if (Singleton.getInstance().existType(valor.ToString())) {
+                    return new Literal(sim.tipo, Singleton.getInstance().getType(valor.ToString()));
+                }
                 if (sim == null) {
                     Form1.salidaConsola.AppendText("No se encontro la variable\n");
                     return null;

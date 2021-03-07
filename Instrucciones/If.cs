@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using System;
 using System.Collections.Generic;
@@ -28,14 +29,14 @@ namespace Proyecto1_Compi2.Instrucciones
             this.fila = fila;
             this.columna = columna;
         }
-        public Retornar Ejecutar(Entorno ent, string Ambito)
+        public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
             bool condicionBooleana = (bool)condicion.obtenerValor(ent).valor;
             if (condicionBooleana)
             {
                 foreach (Instruccion ins in listaInstrucciones)
                 {
-                    Retornar retorn = ins.Ejecutar(ent, Ambito);
+                    Retornar retorn = ins.Ejecutar(ent, Ambito,AST);
                     if (retorn.isReturn == true)
                     {
                         return retorn;
@@ -51,20 +52,20 @@ namespace Proyecto1_Compi2.Instrucciones
                 }
                 if (subIf != null)
                 {
-                    return subIf.Ejecutar(ent, Ambito);
+                    return subIf.Ejecutar(ent, Ambito, AST);
                 }
             }
             else {
                 if (subIf != null)
                 {
-                    Retornar ret = subIf.Ejecutar(ent, Ambito);
+                    Retornar ret = subIf.Ejecutar(ent, Ambito, AST);
                     return ret;
                 }
                 else {
                     if (listaInsElse != null) {
                         foreach (Instruccion ins in listaInsElse)
                         {
-                            Retornar retorn = ins.Ejecutar(ent, Ambito);
+                            Retornar retorn = ins.Ejecutar(ent, Ambito,AST);
                             if (retorn.isReturn == true)
                             {
                                 return retorn;

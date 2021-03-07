@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using Proyecto1_Compi2.Expresiones;
+using Proyecto1_Compi2.Analizadores;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
@@ -23,7 +24,7 @@ namespace Proyecto1_Compi2.Instrucciones
             this.listVarLocales = listVarLocales;
         }
 
-        public Retornar Ejecutar(Entorno ent, String ambito)
+        public Retornar Ejecutar(Entorno ent, String ambito, Sintactico AST)
         {
             Funcion fun = this;
             Singleton.getInstance().putFuncion(fun, id.ToLower());
@@ -62,7 +63,7 @@ namespace Proyecto1_Compi2.Instrucciones
                         }
                         else {
                             temporal.setExpresion(resultado);
-                            temporal.Ejecutar(tablaLocal, this.id);
+                            temporal.Ejecutar(tablaLocal, this.id,null);
                         }                  
 
                     }
@@ -77,12 +78,12 @@ namespace Proyecto1_Compi2.Instrucciones
             {
                 foreach (Instruccion decla in listVarLocales)
                 {
-                    decla.Ejecutar(tablaLocal, this.id);
+                    decla.Ejecutar(tablaLocal, this.id,null);
                 }
             }
             foreach (Instruccion instr in listInstrucciones)
             {
-                Retornar ret = instr.Ejecutar(tablaLocal, this.id);
+                Retornar ret = instr.Ejecutar(tablaLocal, this.id,null);
                 if (ret.isReturn)
                 {
                     return ret.valor;

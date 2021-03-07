@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Proyecto1_Compi2.Expresiones
             this.valor = tamanio;
         }
 
-        public Retornar Ejecutar(Entorno ent, string Ambito)
+        public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
             /*
              * Insertar arreglo en 

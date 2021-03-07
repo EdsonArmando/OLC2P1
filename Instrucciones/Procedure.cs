@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using Proyecto1_Compi2.Expresiones;
 using System;
@@ -25,7 +26,7 @@ namespace Proyecto1_Compi2.Instrucciones
             this.fila = fila;
             this.columna = columna;
         }
-        public Retornar Ejecutar(Entorno ent, String ambito)
+        public Retornar Ejecutar(Entorno ent, String ambito, Sintactico AST)
         {
             Procedure fun = this;
             Singleton.getInstance().putFuncion(fun, id.ToLower());
@@ -42,7 +43,7 @@ namespace Proyecto1_Compi2.Instrucciones
             Entorno tablaLocal = new Entorno(ent);
             if (listVarLocales != null) {
                 foreach (Instruccion decla in listVarLocales) {
-                    decla.Ejecutar(tablaLocal,this.id);
+                    decla.Ejecutar(tablaLocal,this.id,null);
                 }
             }
             if (param_Actuales != null && param_Formales != null)
@@ -71,7 +72,7 @@ namespace Proyecto1_Compi2.Instrucciones
                         else
                         {
                             temporal.setExpresion(resultado);
-                            temporal.Ejecutar(tablaLocal, this.id);
+                            temporal.Ejecutar(tablaLocal, this.id,null);
                         }
                     }
                 }
@@ -82,7 +83,7 @@ namespace Proyecto1_Compi2.Instrucciones
             }
             foreach (Instruccion instr in listInstrucciones)
             {
-                Retornar ret = instr.Ejecutar(tablaLocal,this.id);
+                Retornar ret = instr.Ejecutar(tablaLocal,this.id, null);
                 if (ret.isReturn)
                 {
                     return ret.valor;

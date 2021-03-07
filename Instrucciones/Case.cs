@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using System;
 using System.Collections.Generic;
@@ -22,19 +23,19 @@ namespace Proyecto1_Compi2.Instrucciones
             this.condicion = condicion;
             this.Case_Instr = Case_Instr;
         }
-        public Retornar Ejecutar(Entorno ent, string Ambito)
+        public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
             Expresion val = condicion.obtenerValor(ent);
             foreach (Case ins in Case_Instr) {
                 Expresion exprtemp = ins.condicion.obtenerValor(ent);
                 if (exprtemp.valor.ToString() == val.valor.ToString()) {
                     LinkedList<Instruccion> tempList = ins.Case_Instr;
-                    Retornar ret = tempList.ElementAt(0).Ejecutar(ent,Ambito);
+                    Retornar ret = tempList.ElementAt(0).Ejecutar(ent,Ambito,AST);
                     return ret;
                 }
             }
             foreach (Instruccion ins in Else) {
-                Retornar ret = ins.Ejecutar(ent,Ambito);
+                Retornar ret = ins.Ejecutar(ent,Ambito,AST);
                 if (ret.isReturn) {
                     return ret;
                 }

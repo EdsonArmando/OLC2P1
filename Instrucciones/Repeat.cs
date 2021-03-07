@@ -1,4 +1,5 @@
 ﻿using Proyecto1_Compi2.Abstracto;
+using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,14 @@ namespace Proyecto1_Compi2.Instrucciones
             this.condicion = condicion;
             this.listaIntr = listaIntr;
         }
-        public Retornar Ejecutar(Entorno ent, string Ambito)
+        public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
             bool seguirWhile = true;
             while (!(Boolean)condicion.obtenerValor(ent).valor && seguirWhile)
             {
                 foreach (Instruccion ins in listaIntr)
                 {
-                    Retornar contenido = ins.Ejecutar(ent,Ambito);
+                    Retornar contenido = ins.Ejecutar(ent,Ambito, AST);
                     if (contenido.isBreak)
                     {
                         seguirWhile = false;
