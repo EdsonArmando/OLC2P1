@@ -25,7 +25,10 @@ namespace Proyecto1_Compi2.Expresiones
             {
                 return new Literal(simbolo.getTipo(), simbolo.getValor());
             }
-            return new Literal(Simbolo.EnumTipoDato.ERROR, "@Error@");
+            else {
+                Form1.salidaConsola.AppendText("No se encontro el valor!! \n");
+                return new Literal(Simbolo.EnumTipoDato.ERROR, "@Error@");
+            }            
         }
     }
 }

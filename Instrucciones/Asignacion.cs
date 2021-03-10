@@ -43,6 +43,7 @@ namespace Proyecto1_Compi2.Instrucciones
             else {
                 Expresion resultado = valor.obtenerValor(ent);
                 Simbolo sim = ent.obtener(id, ent);
+                ent.recorrer(ent);
                 if (resultado != null && posX == null)
                 {
                     if (sim.referencia_const.ToLower() == "const")

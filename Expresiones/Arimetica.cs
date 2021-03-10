@@ -12,7 +12,6 @@ namespace Proyecto1_Compi2.Expresiones
     {
         private Expresion operadorDer;
         private Expresion operadorIzq;
-        private Expresion objeto;
         private Tipo_operacion tipo;
         public Arimetica(Expresion operadorIzq, Expresion operadorDer, Tipo_operacion tipo)
         {
@@ -20,7 +19,7 @@ namespace Proyecto1_Compi2.Expresiones
             this.operadorIzq = operadorIzq;
             this.operadorDer = operadorDer;
         }
-        public Arimetica(Arimetica operadorIzq, Tipo_operacion tipo)
+        public Arimetica(Expresion operadorIzq, Tipo_operacion tipo)
         {
             this.tipo = tipo;
             this.operadorIzq = operadorIzq;
@@ -28,11 +27,6 @@ namespace Proyecto1_Compi2.Expresiones
         public Arimetica(String a, Tipo_operacion tipo)
         {
             this.valor = a;
-            this.tipo = tipo;
-        }
-        public Arimetica(Expresion a, Tipo_operacion tipo)
-        {
-            this.objeto = a;
             this.tipo = tipo;
         }
         public Arimetica(Double a)
@@ -74,7 +68,7 @@ namespace Proyecto1_Compi2.Expresiones
             else if (tipo == Tipo_operacion.SUMA)
             {
                 Expresion izquierda = operadorIzq.obtenerValor(ent);
-                Expresion derecha = operadorDer.obtenerValor(ent);
+                Expresion derecha = operadorDer.obtenerValor(ent);                
                 if (izquierda.tipo == Simbolo.EnumTipoDato.DOUBLE && derecha.tipo == Simbolo.EnumTipoDato.DOUBLE || izquierda.tipo == Simbolo.EnumTipoDato.INT && derecha.tipo == Simbolo.EnumTipoDato.INT || izquierda.tipo == Simbolo.EnumTipoDato.DOUBLE && derecha.tipo == Simbolo.EnumTipoDato.INT || izquierda.tipo == Simbolo.EnumTipoDato.INT && derecha.tipo == Simbolo.EnumTipoDato.DOUBLE)
                 {
                     return new Literal(Simbolo.EnumTipoDato.DOUBLE, (double)izquierda.valor + (double)derecha.valor);
@@ -123,7 +117,7 @@ namespace Proyecto1_Compi2.Expresiones
                     return new Literal(sim.tipo, Double.Parse(sim.valor.ToString()));
                 }
                 else {
-                    return new Literal(sim.tipo, 0);
+                    return new Literal(sim.tipo, Double.Parse("0"));
                 }              
             }
             /*
@@ -135,6 +129,12 @@ namespace Proyecto1_Compi2.Expresiones
             {
 
                 return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor > (Double)operadorDer.obtenerValor(ent).valor);
+            }
+            else if (tipo == Tipo_operacion.DIFERENCIACION)
+            {
+                Double uno = (Double)operadorIzq.obtenerValor(ent).valor;
+                Double dos = (Double)operadorDer.obtenerValor(ent).valor;
+                return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor != (Double)operadorDer.obtenerValor(ent).valor);
             }
             else if (tipo == Tipo_operacion.AND)
             {
@@ -150,9 +150,8 @@ namespace Proyecto1_Compi2.Expresiones
             }
             else if (tipo == Tipo_operacion.DIFERENTE)
             {
-                Double izquierda = (Double)operadorIzq.obtenerValor(ent).valor;
-                Double derecha = (Double)operadorDer.obtenerValor(ent).valor;
-                return new Literal(Simbolo.EnumTipoDato.BOOLEAN, izquierda != derecha);
+                bool izquierda = bool.Parse(operadorIzq.obtenerValor(ent).valor.ToString());
+                return new Literal(Simbolo.EnumTipoDato.BOOLEAN, !izquierda);
             }
             else if (tipo == Tipo_operacion.IGUAL_QUE)
             {
@@ -193,7 +192,8 @@ namespace Proyecto1_Compi2.Expresiones
             XOR,
             DIFERENTE,
             MENOR_IGUAL_QUE,
-            MAYOR_IGUAL_QUE
+            MAYOR_IGUAL_QUE,
+            DIFERENCIACION
         }
     }
 }

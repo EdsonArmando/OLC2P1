@@ -53,6 +53,9 @@ namespace Proyecto1_Compi2.Instrucciones
                     {
                         Declaracion temporal = (Declaracion)param_Formales.ElementAt(i);
                         Expresion resultado = param_Actuales.ElementAt(i).obtenerValor(ent);
+                        if (resultado == null) {
+                            return new Literal(Simbolo.EnumTipoDato.ERROR,"");
+                        }
                         if (resultado.tipo == Simbolo.EnumTipoDato.ARRAY)
                         {
                             Id arrayTemp = new Id("");
@@ -67,7 +70,11 @@ namespace Proyecto1_Compi2.Instrucciones
                             {
                                 Literal tem = (Literal)result;
                                 tablaLocal.Insertar(temporal.nombreVariable, new Simbolo(tem.tipo, tem.valor, tem.id, tem.ambito, tem.referencia_const, tem.posicion_X, tem.posicion_Y, tem.posicion_Z, tem.tipoItem));
-                            }
+                            }                            
+                        }
+                        else if (resultado.tipo == Simbolo.EnumTipoDato.OBJETO_TYPE)
+                        {
+                            tablaLocal.Insertar(temporal.nombreVariable, new Simbolo(resultado.tipo, resultado.valor, temporal.nombreVariable, id, temporal.esReferencia_const));
                         }
                         else
                         {

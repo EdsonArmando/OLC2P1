@@ -48,8 +48,10 @@ namespace Proyecto1_Compi2.Instrucciones
         {
             foreach (Type_Object ty in types)
             {
-                Type_Object newType = (Type_Object)ty.Clone();
-                return newType;
+                if (ty.nombreType.ToLower() == id.ToLower()) {
+                    Type_Object newType = (Type_Object)ty.Clone();
+                    return newType;
+                }  
             }
             return null;
         }

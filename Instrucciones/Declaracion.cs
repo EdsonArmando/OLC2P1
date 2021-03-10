@@ -91,6 +91,7 @@ namespace Proyecto1_Compi2.Instrucciones
                                 //Instancia_Type temp = new Instancia_Type(expr.id.ToString().ToLower(), nameArra);
                                 //temp.Ejecutar(ent, ambito,AST);
                                 Type_Object temp2 = Singleton.getInstance().getType(nameArra);
+                                temp2.Ejecutar(ent,ambito,AST);
                                 ent.Insertar(expr.id.ToString().ToLower(), new Simbolo(Simbolo.EnumTipoDato.OBJETO_TYPE, temp2, nameArra, ambito, ""));
                             }
                             else
@@ -126,7 +127,7 @@ namespace Proyecto1_Compi2.Instrucciones
                     //Verifico si es un type o un ARRAY
                     if (Singleton.getInstance().existType(nameArra))
                     {
-                        Type_Object temp = Singleton.getInstance().getType(nameArra);
+                        Type_Object temp = Singleton.getInstance().getType(nameArra);                        
                         ent.Insertar(nombreVariable, new Simbolo(Simbolo.EnumTipoDato.OBJETO_TYPE, temp, nameArra, ambito, ""));
                         //Creo la Instancia del Type
                         //Instancia_Type temp = new Instancia_Type(nombreVariable,nameArra);

@@ -16,6 +16,13 @@ namespace Proyecto1_Compi2.Entornos
             this.anterior = entornoAnterior;
             // llamada del constructor de la clase padre
         }
+        //Recorrer Tabla
+        public void recorrer(Entorno ent) {
+            Simbolo sim;
+            foreach (String id in ent.tablaSimbolos.Keys) {
+                sim = (Simbolo)ent.tablaSimbolos[id.ToLower()];
+            }
+        }
         //Insertar Types
         public bool existeVariable(String id)
         {

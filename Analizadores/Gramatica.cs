@@ -68,12 +68,13 @@ namespace Proyecto1_Compi2.Analizadores
             var tMayorQ = ToTerm(">");
             var tmayorIgual = ToTerm(">=");
             var tmenorIgual = ToTerm("<=");
+            var tDiferenciacion = ToTerm("<>");
             var tMenorQ = ToTerm("<");
 
 
             RegisterOperators(1, MAS, MENOS);
             RegisterOperators(2, POR, DIVIDIDO, POW);
-            RegisterOperators(3, tMayorQ, tMenorQ, tmenorIgual, tmayorIgual);
+            RegisterOperators(3, tMayorQ, tMenorQ, tmenorIgual, tmayorIgual, tDiferenciacion);
             RegisterOperators(4, tOr, tAnd, tDifQ);
 
             #endregion
@@ -173,11 +174,12 @@ namespace Proyecto1_Compi2.Analizadores
                                 | returnFuncion
                                 | LLAMADAFUNCION + PTCOMA
                                 | IF
+                                | listId + PDOSPUNTOS + IGUAL + expresion + PTCOMA
                                 | FOR
                                 | INSTRCASE
                                 | WHILE
                                 | CASE
-                                | REPEAT
+                                | REPEAT                                
                                 | ASIGNACION + PTCOMA
                                 | tBreak + PTCOMA
                                 | tContinue + PTCOMA
@@ -218,7 +220,8 @@ namespace Proyecto1_Compi2.Analizadores
                 | expresion + IGUAL + expresion
                 | expresion + tOr + expresion
                 | expresion + tAnd + expresion
-                | expresion + tDifQ + expresion
+                | tDifQ + expresion
+                | expresion + tDiferenciacion + expresion
                 | ACCESOARRAY
                 | NUMERO
                 | tCadena2

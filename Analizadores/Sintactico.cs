@@ -425,6 +425,10 @@ namespace Proyecto1_Compi2.Analizadores
             {
                 return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.MAYOR_IGUAL_QUE);
             }
+            else if (tokenOperador.Equals("<>"))
+            {
+                return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIFERENCIACION);
+            }
             else if (tokenOperador.Equals("="))
             {
                 return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.IGUAL_QUE);
@@ -476,7 +480,7 @@ namespace Proyecto1_Compi2.Analizadores
                         return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIVISION);
                     default:
                         if (tokenOperador.Equals(">") || tokenOperador.Equals("<") || tokenOperador.Equals(">=") || tokenOperador.Equals("<=") || tokenOperador.Equals("=")
-                        || tokenOperador.Equals("and") || tokenOperador.Equals("or") || tokenOperador.Equals("^") || tokenOperador.Equals("not"))
+                        || tokenOperador.Equals("and") || tokenOperador.Equals("<>") || tokenOperador.Equals("or") || tokenOperador.Equals("^") || tokenOperador.Equals("not"))
                         {
                             return expresion_logica(actual);
                         }
@@ -488,7 +492,13 @@ namespace Proyecto1_Compi2.Analizadores
             }            
             else if (actual.ChildNodes.Count == 2)
             {
-                return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(1)), Arimetica.Tipo_operacion.NEGATIVO);
+                if (actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0] == "not")
+                {
+                    return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(1)), Arimetica.Tipo_operacion.DIFERENTE);
+                }
+                else {
+                    return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(1)), Arimetica.Tipo_operacion.NEGATIVO);
+                }                
             }
             else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 10 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
             {

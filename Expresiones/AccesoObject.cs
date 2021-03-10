@@ -23,9 +23,13 @@ namespace Proyecto1_Compi2.Expresiones
         {         
             Expresion izqu = izquierdo.obtenerValor(ent);
 
-            Instrucciones.Type_Object temp = new Instrucciones.Type_Object("",null);
+            Instrucciones.Type_Object temp = new Instrucciones.Type_Object("",null);            
             if (izqu.valor.GetType() == temp.GetType()) {
                 temp = (Instrucciones.Type_Object)izqu.valor;
+                if (temp.entObjeto.tablaSimbolos.Count == 0)
+                {
+                    temp.Ejecutar(null, "", null);
+                }               
                 Expresion valorDerecho = derecho.obtenerValor(temp.entObjeto);
                 if (valorDerecho.valor.GetType() == temp.GetType())
                 {
@@ -36,6 +40,6 @@ namespace Proyecto1_Compi2.Expresiones
                 }
             }
             return null;
-        }
+        }    
     }
 }

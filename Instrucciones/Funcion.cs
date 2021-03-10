@@ -60,10 +60,12 @@ namespace Proyecto1_Compi2.Instrucciones
                                 Literal tem = (Literal)result;
                                 tablaLocal.Insertar(temporal.nombreVariable, new Simbolo(tem.tipo, tem.valor, tem.id, tem.ambito, tem.referencia_const, tem.posicion_X, tem.posicion_Y, tem.posicion_Z, tem.tipoItem));
                             }
+                        } else if (resultado.tipo == Simbolo.EnumTipoDato.OBJETO_TYPE) {
+                            tablaLocal.Insertar(temporal.nombreVariable, new Simbolo(resultado.tipo,resultado.valor,temporal.nombreVariable,id,temporal.esReferencia_const));
                         }
                         else {
                             temporal.setExpresion(resultado);
-                            temporal.Ejecutar(tablaLocal, this.id,null);
+                            temporal.Ejecutar(tablaLocal, this.id, null);
                         }                  
 
                     }
