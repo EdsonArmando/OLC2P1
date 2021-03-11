@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Case : Abstracto.Instruccion
+    class Case : Instruccion
     {
         private Expresion condicion;
         private LinkedList<Instruccion> Case_Instr;
@@ -41,6 +41,11 @@ namespace Proyecto1_Compi2.Instrucciones
                 }
             }
             return new Retornar();
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

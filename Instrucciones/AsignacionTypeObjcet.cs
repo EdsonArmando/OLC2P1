@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class AsignacionTypeObjcet : Abstracto.Instruccion
+    class AsignacionTypeObjcet : Instruccion
     {
         public LinkedList<String> listId;
         public Expresion valor;
@@ -61,6 +61,10 @@ namespace Proyecto1_Compi2.Instrucciones
                     ent.setVariable(accesos.ElementAt(0).ToLower(), new Simbolo(res.tipo, res.valor, accesos.ElementAt(0).ToLower(), Ambito, ""), ent);
                 }
             }
+        }
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

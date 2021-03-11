@@ -147,5 +147,10 @@ namespace Proyecto1_Compi2.Instrucciones
         public void setExpresion(Expresion expr) {
             this.expresion = expr;
         }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

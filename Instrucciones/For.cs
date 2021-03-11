@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class For : Abstracto.Instruccion
+    class For : Instruccion
     {
         String id;
         Expresion valorInicio;
@@ -47,6 +47,11 @@ namespace Proyecto1_Compi2.Instrucciones
                 aumento.Ejecutar(ent,Ambito,AST);
             }
             return new Retornar();
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -28,5 +28,10 @@ namespace Proyecto1_Compi2.Expresiones
         {
             throw new NotImplementedException();
         }
+
+        public override StringBuilder Traducir(Entorno ent, StringBuilder str)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

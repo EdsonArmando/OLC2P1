@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Repeat : Abstracto.Instruccion
+    class Repeat : Instruccion
     {
         Expresion condicion;
         LinkedList<Instruccion> listaIntr;
@@ -41,6 +41,16 @@ namespace Proyecto1_Compi2.Instrucciones
                 }
             }
                 return new Retornar();
+        }
+
+        public StringBuilder Traducir(Entorno ent)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

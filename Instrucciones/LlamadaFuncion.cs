@@ -45,5 +45,25 @@ namespace Proyecto1_Compi2.Instrucciones
             }
             return null;
         }
+
+        public override StringBuilder Traducir(Entorno ent, StringBuilder strin)
+        {
+            StringBuilder val = new StringBuilder();
+            foreach (Abstracto.Expresion exp in parametros)
+            {
+                val = exp.Traducir(ent, val);
+                val.Append(",");
+            }
+            if (parametros.Count > 0) {
+                val.Remove(val.Length - 1, 1);
+            }            
+            strin.Append(id+ "(" + val.ToString() + ")");
+            return strin;
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

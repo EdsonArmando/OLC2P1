@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Instancia_Type : Abstracto.Instruccion
+    class Instancia_Type : Instruccion
     {
         public String nombreObjeto;
         public String nombreType;
@@ -33,6 +33,10 @@ namespace Proyecto1_Compi2.Instrucciones
                 ent.Insertar(nombreObjeto, new Simbolo(Simbolo.EnumTipoDato.OBJETO_TYPE, this, nombreObjeto, Ambito, ""));
             }            
             return new Retornar();
+        }
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

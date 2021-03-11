@@ -30,5 +30,19 @@ namespace Proyecto1_Compi2.Instrucciones
             Form1.salidaConsola.AppendText("\n");
             return new Retornar();
         }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            StringBuilder temp = new StringBuilder();
+            foreach (Abstracto.Expresion exp in valores)
+            {
+                temp =  exp.Traducir(ent,temp) ;
+                temp.Append(",");
+            }
+            temp.Remove(temp.Length - 1, 1);
+            str.Append("writeln( " + temp.ToString() + " );");
+            str.Append("\n");
+            return str;
+        }
     }
 }

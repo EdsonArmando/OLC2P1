@@ -12,6 +12,7 @@ namespace Proyecto1_Compi2.Abstracto
         public int fila, columna;
         public EnumTipoDato tipo;
         abstract public Expresion obtenerValor(Entornos.Entorno ent);
+        abstract public System.Text.StringBuilder Traducir(Entornos.Entorno ent, System.Text.StringBuilder strin);
         public abstract EnumTipoDato getTipo();
     }
 }

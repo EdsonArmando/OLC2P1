@@ -7,13 +7,18 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Continue : Abstracto.Instruccion
+    class Continue : Instruccion
     {
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
             Retornar ret = new Retornar();
             ret.isContinue = true;
             return ret;
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

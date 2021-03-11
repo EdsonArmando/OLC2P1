@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Type_Object : Abstracto.Instruccion, ICloneable
+    class Type_Object : Instruccion, ICloneable
     {
         public String nombreType;
         public LinkedList<Instruccion> listaVariables;
@@ -32,6 +32,11 @@ namespace Proyecto1_Compi2.Instrucciones
             }
             //ent.insertType(nombreType,this);
             return new Retornar();
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Return : Abstracto.Instruccion
+    class Return : Instruccion
     {
         Expresion valorReturn;
         public Return(Expresion valor)
@@ -20,6 +20,10 @@ namespace Proyecto1_Compi2.Instrucciones
             retornar.isReturn = true;
             retornar.valor = valorReturn.obtenerValor(ent);
             return retornar;
+        }
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

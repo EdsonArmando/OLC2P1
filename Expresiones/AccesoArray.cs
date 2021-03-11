@@ -76,5 +76,26 @@ namespace Proyecto1_Compi2.Expresiones
             }
             return null;
         }
+
+        public override StringBuilder Traducir(Entorno ent, StringBuilder strin)
+        {
+            StringBuilder tm = new StringBuilder();
+            if (valor[0] != null && valor[1] == null && valor[2] == null)
+            {
+                strin.Append(Nombre_id + "[" + valor[0].Traducir(ent, tm).ToString() + "]");
+                
+            }
+            //Acceso a un array de dos dimensiones
+            else if (valor[0] != null && valor[1] != null && valor[2] == null)
+            {
+                strin.Append(Nombre_id + "[" + valor[0].Traducir(ent, tm).ToString() + " , " + valor[1].Traducir(ent, tm.Clear()).ToString() + "]");
+            }
+            //Acceso a un array de tres dimensiones
+            else if (valor[0] != null && valor[1] != null && valor[2] != null)
+            {
+                strin.Append(Nombre_id + "[" + valor[0].Traducir(ent, tm).ToString() + " , " + valor[1].Traducir(ent, tm.Clear()).ToString() + " , " + valor[2].Traducir(ent, tm.Clear()).ToString() + "]");
+            }
+            return strin;
+        }
     }
 }

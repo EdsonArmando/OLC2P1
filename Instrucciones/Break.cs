@@ -15,5 +15,9 @@ namespace Proyecto1_Compi2.Instrucciones
             ret.isBreak = true;
             return ret;
         }
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

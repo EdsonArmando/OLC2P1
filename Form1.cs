@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Proyecto1_Compi2.Analizadores;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,7 +25,10 @@ namespace Proyecto1_Compi2
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            Form1.salidaConsola.Clear();
+            Sintactico analizador = new Sintactico();
+            string textAnalizar = richTextBox1.Text;
+            analizador.traducir(textAnalizar);
         }
 
         private void richTextBox1_TextChanged_1(object sender, EventArgs e)

@@ -1,6 +1,7 @@
 ﻿using Irony.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,10 +32,24 @@ namespace Proyecto1_Compi2.Reportes
             return null;
         }
         public void generarArchivo() {
-            StreamWriter archivo = new StreamWriter("C:\\compiladores2\\AST.txt");
+            StreamWriter archivo = new StreamWriter("C:\\compiladores2\\AST.dot");
             archivo.Write(text);
             archivo.Write("\n}");
             archivo.Close();
+            ejecutar(@"dot -Tsvg C:\\compiladores2\\AST.dot -o C:\\compiladores2\\AST.svg");
+            
+        }
+        static void ejecutar(string _Command)
+        {
+            System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("cmd", "/c " + _Command);
+            procStartInfo.RedirectStandardOutput = true;
+            procStartInfo.UseShellExecute = false;
+            procStartInfo.CreateNoWindow = false;
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo = procStartInfo;
+            proc.Start();
+            string result = proc.StandardOutput.ReadToEnd();
+            Console.WriteLine(result);
         }
     }
 }

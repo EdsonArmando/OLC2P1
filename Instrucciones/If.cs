@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class If : Abstracto.Instruccion
+    class If : Instruccion
     {
         Abstracto.Expresion condicion;
         LinkedList<Instruccion> listaInstrucciones;
@@ -83,6 +83,11 @@ namespace Proyecto1_Compi2.Instrucciones
                 }
             }
             return new Retornar();
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

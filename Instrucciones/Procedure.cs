@@ -103,5 +103,15 @@ namespace Proyecto1_Compi2.Instrucciones
         {
             this.param_Actuales = parametros;
         }
+
+        public override StringBuilder Traducir(Entorno ent, StringBuilder strin)
+        {
+            throw new NotImplementedException();
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -40,6 +40,14 @@ namespace Proyecto1_Compi2.Expresiones
                 }
             }
             return null;
-        }    
+        }
+
+        public override StringBuilder Traducir(Entorno ent, StringBuilder str)
+        {
+            StringBuilder izq = new StringBuilder();
+            StringBuilder dere = new StringBuilder();
+            str.Append(izquierdo.Traducir(ent,izq) + "." + derecho.Traducir(ent,dere));
+            return str;
+        }
     }
 }

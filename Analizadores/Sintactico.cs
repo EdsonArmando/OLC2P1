@@ -42,11 +42,49 @@ namespace Proyecto1_Compi2.Analizadores
                 Form1.salidaConsola.AppendText("Se analizo correctamente\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
+                System.Text.StringBuilder entradaTradducida = new System.Text.StringBuilder();
                 foreach (Abstracto.Instruccion ins in AST) {
                     ins.Ejecutar(ent,"global",this);
                 }
             }
         }
+
+        internal void traducir(string entrada)
+        {
+            types.Clear();
+            Singleton.getInstance().limpiarEntorno();
+            Gramatica gramatica = new Gramatica();
+            LanguageData lenguaje = new LanguageData(gramatica);
+            Parser parser = new Parser(lenguaje);
+            ParseTree arbol = parser.Parse(entrada);
+            ParseTreeNode raiz = arbol.Root;
+            if (raiz == null || arbol.ParserMessages.Count() > 0)
+            {
+                for (int i = 0; i < arbol.ParserMessages.Count(); i++)
+                {
+                    Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString() + " Fila: " + (arbol.ParserMessages.ElementAt(i).Location.Line + 1)
+                        + " Columna: " + arbol.ParserMessages.ElementAt(i).Location.Column
+                        + "\n");
+                }
+                return;
+            }
+            else
+            {
+                GraficarAST graficar = new GraficarAST(raiz);
+                graficar.recorrerRaiz(raiz);
+                graficar.generarArchivo();
+                Form1.salidaConsola.AppendText("Se analizo correctamente\n");
+                LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
+                Entornos.Entorno ent = new Entornos.Entorno(null);
+                System.Text.StringBuilder entradaTradducida = new System.Text.StringBuilder();
+                foreach (Abstracto.Instruccion ins in AST)
+                {
+                    entradaTradducida = ins.TraducirInstr(ent,entradaTradducida ,"global");
+                }
+                Form1.salidaConsola.AppendText(entradaTradducida.ToString());
+            }
+        }
+
         private Expresion[,] Dimensiones(ParseTreeNode actual,Expresion[,] valores) {
             if (actual.ChildNodes.Count == 4)
             {
@@ -290,7 +328,8 @@ namespace Proyecto1_Compi2.Analizadores
                         Dimensiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5), nuevo);
                         fila = 0;
                         if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "var") {
-                            instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0],devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)),nuevo));
+                            Simbolo.EnumTipoDato tipo = devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8));
+                            instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8).ToString().Split(' ')[0], nuevo));
                         } else if (actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0].ToLower() == "type") {
                             instrucciones.AddLast(new Expresiones.Array(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], devTipoDato(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)), nuevo));
                         }

@@ -179,6 +179,105 @@ namespace Proyecto1_Compi2.Expresiones
             }
             return null;
         }
+
+        public override StringBuilder Traducir(Entorno ent, StringBuilder str)
+        {
+            StringBuilder temp = new StringBuilder();
+            StringBuilder tempDere = new StringBuilder();
+            if (tipo == Tipo_operacion.DIVISION)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " / " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.MULTIPLICACION)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " * " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.CADENA)
+            {
+                return str.Append("'" + valor.ToString()+"'");
+            }
+            else if (tipo == Tipo_operacion.RESTA)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " - " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.POTENCIA)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " ^ " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.SUMA)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " + " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.NEGATIVO)
+            {
+                return str.Append("-" + operadorIzq.Traducir(ent, temp).ToString());
+            }
+            else if (tipo == Tipo_operacion.NUMERO)
+            {
+                return str.Append(valor.ToString());
+            }
+            else if (tipo == Tipo_operacion.TRUE)
+            {
+                return str.Append("true");
+            }
+            else if (tipo == Tipo_operacion.FALSE)
+            {
+                return str.Append("false");
+            }
+            else if (tipo == Tipo_operacion.IDENTIFICADOR)
+            {
+                return str.Append(valor.ToString());
+            }
+            /*
+             * 
+             *      OPERACIONES LOGICAS
+             * 
+             */
+            else if (tipo == Tipo_operacion.MAYOR_QUE)
+            {
+
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " > " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.DIFERENCIACION)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " <> " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.AND)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " and " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.OR)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " or " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.XOR)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " > " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.DIFERENTE)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString());
+            }
+            else if (tipo == Tipo_operacion.IGUAL_QUE)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " = " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.MENOR_QUE)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " < " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.MENOR_IGUAL_QUE)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " <= " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            else if (tipo == Tipo_operacion.MAYOR_IGUAL_QUE)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " >= " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
+            return null;
+        }
+
+
         public enum Tipo_operacion
         {
             SUMA,

@@ -30,5 +30,11 @@ namespace Proyecto1_Compi2.Expresiones
                 return new Literal(Simbolo.EnumTipoDato.ERROR, "@Error@");
             }            
         }
+
+        public override StringBuilder Traducir(Entorno ent, StringBuilder str)
+        {
+            str.Append(id);
+            return str;
+        }
     }
 }

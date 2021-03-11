@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Aumento : Abstracto.Instruccion
+    class Aumento : Instruccion
     {
         String id;
         public Aumento(String id)
@@ -22,6 +22,10 @@ namespace Proyecto1_Compi2.Instrucciones
             Simbolo sim = new Simbolo(variable.tipo, (object)valAument, id, variable.ambito,variable.referencia_const);
             ent.setVariable(id, sim, ent);
             return new Retornar();
+        }
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

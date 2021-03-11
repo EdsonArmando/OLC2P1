@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Asignacion : Abstracto.Instruccion
+    class Asignacion : Instruccion
     {
         String id;
         Expresion valor;
@@ -154,6 +154,11 @@ namespace Proyecto1_Compi2.Instrucciones
                 }
             }
             return new Retornar();
+        }
+
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
+        {
+            throw new NotImplementedException();
         }
     }
 }

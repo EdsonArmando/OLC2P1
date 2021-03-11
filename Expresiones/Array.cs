@@ -7,13 +7,13 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Expresiones
 {
-    class Array : Abstracto.Instruccion
+    class Array : Instruccion
     {
         private String Nombre_id;
-        private Simbolo.EnumTipoDato Tipo;
+        private Object Tipo;
         private Expresion[,] valor;
          
-        public Array(String id, Simbolo.EnumTipoDato tipo, Expresion[,] tamanio) {
+        public Array(String id, Object tipo, Expresion[,] tamanio) {
             this.Nombre_id = id;
             this.Tipo = tipo;
             this.valor = tamanio;
@@ -36,7 +36,7 @@ namespace Proyecto1_Compi2.Expresiones
                 int[] posiciones = new int[2];
                 posiciones[0] = int.Parse(PosiInicial.valor.ToString());
                 posiciones[1] = int.Parse(PosFinal.valor.ToString());
-                Simbolo array = new Simbolo(Simbolo.EnumTipoDato.ARRAY,temp,Nombre_id,Ambito,"",posiciones,null,null,Tipo);
+                Simbolo array = new Simbolo(Simbolo.EnumTipoDato.ARRAY,temp,Nombre_id,Ambito,"",posiciones,null,null,devTipoDato(Tipo.ToString()));
                 ent.Insertar(Nombre_id,array);
             }
             //Significa que es de dos dimension
@@ -54,7 +54,7 @@ namespace Proyecto1_Compi2.Expresiones
                 int[] posicionesY = new int[2];
                 posicionesY[0] = int.Parse(PosiInicialY.valor.ToString());
                 posicionesY[1] = int.Parse(PosFinalY.valor.ToString());
-                Simbolo array = new Simbolo(Simbolo.EnumTipoDato.ARRAY, temp, Nombre_id, Ambito, "", posicionesX, posicionesY, null,Tipo);
+                Simbolo array = new Simbolo(Simbolo.EnumTipoDato.ARRAY, temp, Nombre_id, Ambito, "", posicionesX, posicionesY, null, devTipoDato(Tipo.ToString()));
                 ent.Insertar(Nombre_id, array);
             }
             //Significa que es de Tres dimension
@@ -77,7 +77,7 @@ namespace Proyecto1_Compi2.Expresiones
                 int[] posicionesZ = new int[2];
                 posicionesZ[0] = int.Parse(PosiInicialZ.valor.ToString());
                 posicionesZ[1] = int.Parse(PosFinalZ.valor.ToString());
-                Simbolo array = new Simbolo(Simbolo.EnumTipoDato.ARRAY, temp, Nombre_id, Ambito, "", posicionesX, posicionesY, posicionesZ,Tipo);
+                Simbolo array = new Simbolo(Simbolo.EnumTipoDato.ARRAY, temp, Nombre_id, Ambito, "", posicionesX, posicionesY, posicionesZ, devTipoDato(Tipo.ToString()));
                 ent.Insertar(Nombre_id, array);
             }
             else {
@@ -86,9 +86,53 @@ namespace Proyecto1_Compi2.Expresiones
             return new Retornar();
         }
 
-        public static implicit operator Array(Expresion v)
+        public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
-            throw new NotImplementedException();
+            StringBuilder temp = new StringBuilder();
+            if (valor[0, 0] != null && valor[1, 0] == null)
+            {
+                String st = "var " + Nombre_id + ": array" + "[" + valor[0, 0].Traducir(ent, temp) + ".." + valor[0, 1].Traducir(ent, temp.Clear()) + "] of " + Tipo.ToString() + ';';
+                str.Append(st);
+                str.Append("\n");
+            }
+            //Significa que es de dos dimension
+            else if (valor[0, 0] != null && valor[1, 0] != null && valor[2, 0] == null)
+            {
+                String st = "var " + Nombre_id + ": array" + "[" + valor[0, 0].Traducir(ent, temp) + ".." + valor[0, 1].Traducir(ent, temp.Clear()) +","+ valor[1, 0].Traducir(ent, temp.Clear()) + ".." + valor[1, 1].Traducir(ent, temp.Clear()) + "] of " + Tipo.ToString() + ';';
+                str.Append(st);
+                str.Append("\n");
+            }
+            //Significa que es de Tres dimension
+            else if (valor[0, 0] != null && valor[1, 0] != null && valor[2, 0] != null)
+            {
+                String st = "var " + Nombre_id + ": array" + "[" + valor[0, 0].Traducir(ent, temp) + ".." + valor[0, 1].Traducir(ent, temp.Clear()) + "," + valor[1, 0].Traducir(ent, temp.Clear()) + ".." + valor[1, 1].Traducir(ent, temp.Clear())+ "," + valor[2, 0].Traducir(ent, temp.Clear()) + ".." + valor[2, 1].Traducir(ent, temp.Clear()) + "] of " + Tipo.ToString() + ';';
+                str.Append(st);
+                str.Append("\n");
+            }
+            return str;
+        }
+        private Simbolo.EnumTipoDato devTipoDato(String actual)
+        {
+            string valor = actual.ToString().Split(' ')[0];
+            switch (valor.ToLower())
+            {
+                case "integer":
+                    return Simbolo.EnumTipoDato.INT;
+                case "type":
+                    return Simbolo.EnumTipoDato.TYPE;
+                case "array":
+                    return Simbolo.EnumTipoDato.ARRAY;
+                case "char":
+                    return Simbolo.EnumTipoDato.CHAR;
+                case "string":
+                    return Simbolo.EnumTipoDato.STRING;
+                case "double":
+                    return Simbolo.EnumTipoDato.DOUBLE;
+                case "real":
+                    return Simbolo.EnumTipoDato.REAL;
+                default:
+                    return Simbolo.EnumTipoDato.NULL;
+            }
         }
     }
 }

@@ -42,5 +42,11 @@ namespace Proyecto1_Compi2.Expresiones
         {
             return this;
         }
+
+        public override StringBuilder Traducir(Entorno ent, StringBuilder str)
+        {
+            String val = "'" + valor.ToString() + "'";
+            return str.Append(val);
+        }
     }
 }
