@@ -21,7 +21,7 @@ namespace Proyecto1_Compi2.Instrucciones
         {
             foreach (Abstracto.Expresion exp in valores)
             {
-                Expresion val = exp.obtenerValor(ent);
+                Expresion val = exp.obtenerValor(ent);                
                 if (val != null)
                 {
                     Form1.salidaConsola.AppendText(val.valor.ToString() + " ");

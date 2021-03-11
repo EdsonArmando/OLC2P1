@@ -315,13 +315,13 @@ namespace Proyecto1_Compi2.Analizadores
                         {
                             instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)),null,null, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(6))));
                         }
-                        else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 11)
+                        else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 10)
                         {
-                            instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), null, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(9))));
+                            instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)), null, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8))));
                         }
-                        else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 14)
+                        else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 12)
                         {
-                            instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(12))));
+                            instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(6)), expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(10))));
                         }
                         else {
                             instrucciones.AddLast(new Asignacion(token, expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
@@ -410,7 +410,17 @@ namespace Proyecto1_Compi2.Analizadores
             if (actual.ChildNodes.Count == 1)
             {
                 string tokenValor = actual.ChildNodes.ElementAt(0).ToString().Split(' ')[0];
-                return new Arimetica(tokenValor, Arimetica.Tipo_operacion.IDENTIFICADOR);
+                if (tokenValor == "true")
+                {
+                    return new Arimetica(new Literal(Simbolo.EnumTipoDato.BOOLEAN, true), Arimetica.Tipo_operacion.TRUE);
+                }
+                else if (tokenValor == "false")
+                {
+                    return new Arimetica(new Literal(Simbolo.EnumTipoDato.BOOLEAN, false), Arimetica.Tipo_operacion.FALSE);
+                }
+                else {
+                    return new Arimetica(tokenValor, Arimetica.Tipo_operacion.IDENTIFICADOR);
+                }                
             }
             string tokenOperador = actual.ChildNodes.ElementAt(1).ToString().Split(' ')[0];
             if (tokenOperador.Equals("<"))
@@ -500,19 +510,19 @@ namespace Proyecto1_Compi2.Analizadores
                     return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(1)), Arimetica.Tipo_operacion.NEGATIVO);
                 }                
             }
-            else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 10 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
+            else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 8 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
             {
                 Expresion[] posiciones = new Expresion[3];
                 posiciones[0] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2));
-                posiciones[1] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5));
-                posiciones[2] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(8));
+                posiciones[1] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4));
+                posiciones[2] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(6));
                 return new AccesoArray(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0],posiciones);
             }
-            else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 7 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
+            else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 6 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
             {
                 Expresion[] posiciones = new Expresion[3];
                 posiciones[0] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2));
-                posiciones[1] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5));
+                posiciones[1] = expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4));
                 return new AccesoArray(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], posiciones);
             }
             else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 4 && actual.ChildNodes.ElementAt(0).Term.Name == "accesoarray")
@@ -545,6 +555,12 @@ namespace Proyecto1_Compi2.Analizadores
                 else if (tipo.Name.ToLower() == "llamadafuncion")
                 {
                     return new LlamadaFuncion(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0).ToString().Split(' ')[0], devListExpresiones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), 1, 1);
+                } else if (tipo.Name.ToLower() == "true") {
+                    return new Arimetica(new Literal(Simbolo.EnumTipoDato.BOOLEAN,true),Arimetica.Tipo_operacion.TRUE);
+                }
+                else if (tipo.Name.ToLower() == "false")
+                {
+                    return new Arimetica(new Literal(Simbolo.EnumTipoDato.BOOLEAN, false), Arimetica.Tipo_operacion.FALSE);
                 }
                 else
                 {

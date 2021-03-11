@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Entornos
 {
-    class Entorno
+    class Entorno 
     {
         public Hashtable tablaSimbolos;
         public Entorno anterior;
@@ -34,8 +34,8 @@ namespace Proyecto1_Compi2.Entornos
             Simbolo sim = null;
             if (entorno.tablaSimbolos.ContainsKey(id.ToLower()))
             {
-                sim = (Simbolo)entorno.tablaSimbolos[id.ToLower()];
-                return sim;
+                sim = (Simbolo)entorno.tablaSimbolos[id.ToLower()];             
+                return sim;       
             }
             else if (entorno.anterior != null)
             {

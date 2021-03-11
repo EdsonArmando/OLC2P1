@@ -29,7 +29,7 @@ namespace Proyecto1_Compi2.Expresiones
             this.tipoItem = tipoItem;
         }
         public Literal(Simbolo.EnumTipoDato tipo, Object valor)
-        {
+        {            
             this.tipo = tipo;
             this.valor = valor;
         }

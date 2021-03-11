@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Entornos
 {
-    class Simbolo
+    class Simbolo  
     {
         public EnumTipoDato tipo;
         public String id;

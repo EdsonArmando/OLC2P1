@@ -34,7 +34,7 @@ namespace Proyecto1_Compi2.Expresiones
                 Expresion[] temp = (Expresion[])sim.valor;
                 int[] x = sim.posicion_X;
                 int calcularPos = int.Parse(this.valor[0].obtenerValor(ent).valor.ToString()) - x[0];
-                Expresion valor = temp[calcularPos];
+                Expresion valor = temp[calcularPos];                
                 if (valor == null) {
                     return new Literal(Simbolo.EnumTipoDato.NULL,"");
                 }
@@ -49,7 +49,7 @@ namespace Proyecto1_Compi2.Expresiones
                 int calcularPosX = int.Parse(this.valor[0].obtenerValor(ent).valor.ToString()) - x[0];
                 int calcularPosY = int.Parse(this.valor[1].obtenerValor(ent).valor.ToString()) - y[0];
                 int posicionTotal = calcularPosX * ((y[1] - y[0]) + 1) + calcularPosY;
-                Expresion valor = temp[posicionTotal];
+                Expresion valor = temp[posicionTotal];                
                 if (valor == null)
                 {
                     return new Literal(Simbolo.EnumTipoDato.NULL, "");

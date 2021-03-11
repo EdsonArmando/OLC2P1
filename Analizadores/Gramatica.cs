@@ -32,6 +32,8 @@ namespace Proyecto1_Compi2.Analizadores
             var tUntil = ToTerm("until");
             var tConst = ToTerm("const");
             var tIf = ToTerm("if");
+            var ttrue = ToTerm("true");
+            var tFalse = ToTerm("false");
             var tCase = ToTerm("case");
             var tType = ToTerm("type");
             var tOf = ToTerm("of");
@@ -123,6 +125,14 @@ namespace Proyecto1_Compi2.Analizadores
                                 | PROCEDURE                               
                                 | LLAMADAFUNCION + PTCOMA
                                 | Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
+                                | FOR
+                                | INSTRCASE
+                                | WHILE
+                                | CASE
+                                | REPEAT
+                                | ASIGNACION + PTCOMA
+                                | tBreak + PTCOMA
+                                | tContinue + PTCOMA
             ;
             PROCEDURE.Rule = tProcedure + tId + PTCOMA + listInstr + TBEGIN + listInstr2 + TEND + PTCOMA
                             | tProcedure + tId + PARIZQ + listParam + PARDER + PTCOMA + listInstr + TBEGIN + listInstr2 + TEND + PTCOMA
@@ -152,8 +162,8 @@ namespace Proyecto1_Compi2.Analizadores
             returnFuncion.Rule = tExit + PARIZQ + expresion + PARDER + PTCOMA
                                 | tId + PDOSPUNTOS + IGUAL + expresion + PTCOMA                                       
                                 | tId + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
-                                | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
-                                | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
+                                | tId + CORIZQ + expresion + COMA  + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
+                                | tId + CORIZQ + expresion + COMA  + expresion + COMA + expresion + CORDER + PDOSPUNTOS + IGUAL + expresion + PTCOMA
                                 ;
             IF.Rule = tIf + expresion + then  + TBEGIN + listInstr2 + TEND + PTCOMA +ELSEST
                 ;
@@ -204,8 +214,8 @@ namespace Proyecto1_Compi2.Analizadores
                                 | tId + PDOSPUNTOS + tId
                 ;
             ACCESOARRAY.Rule =   tId + CORIZQ + expresion + CORDER
-                                | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER
-                                | tId + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER + CORIZQ + expresion + CORDER
+                                | tId + CORIZQ + expresion  + COMA + expresion + CORDER
+                                | tId + CORIZQ + expresion  + COMA + expresion  + COMA + expresion + CORDER
                 ;
             // Expresiones (Devuleven un valor)
             expresion.Rule = MENOS + expresion
@@ -226,6 +236,8 @@ namespace Proyecto1_Compi2.Analizadores
                 | NUMERO
                 | tCadena2
                 | tId
+                | ttrue
+                | tFalse
                 | ASIGNACIONOBJETO
                 | tCadena
                 | LLAMADAFUNCION

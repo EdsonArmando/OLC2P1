@@ -1,6 +1,7 @@
 ﻿using Proyecto1_Compi2.Abstracto;
 using Proyecto1_Compi2.Analizadores;
 using Proyecto1_Compi2.Entornos;
+using Proyecto1_Compi2.Expresiones;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,8 +43,7 @@ namespace Proyecto1_Compi2.Instrucciones
             }
             else {
                 Expresion resultado = valor.obtenerValor(ent);
-                Simbolo sim = ent.obtener(id, ent);
-                ent.recorrer(ent);
+                Simbolo sim = ent.obtener(id, ent);        
                 if (resultado != null && posX == null)
                 {
                     if (sim.referencia_const.ToLower() == "const")
@@ -51,7 +51,14 @@ namespace Proyecto1_Compi2.Instrucciones
                         Form1.salidaConsola.AppendText("Una variable CONST no se puede modificar !!!");                       
                     }
                     else {
-                        ent.setVariable(id, new Simbolo(sim.tipo, resultado.valor, id, sim.ambito, sim.referencia_const), ent); // Guardo la variable
+                        if (resultado.tipo == Simbolo.EnumTipoDato.ARRAY) 
+                        {
+                            Literal temp = (Literal)resultado;
+                            ent.setVariable(id, new Simbolo(temp.tipo, temp.valor, temp.id, temp.ambito, temp.referencia_const, temp.posicion_X, temp.posicion_Y, temp.posicion_Z, temp.tipoItem),ent); // Guardo la variable
+                        }
+                        else {
+                            ent.setVariable(id, new Simbolo(sim.tipo, resultado.valor, id, sim.ambito, sim.referencia_const), ent); // Guardo la variable
+                        }                        
                     }                    
                 }
                 //Arreglo de una dimension
@@ -60,22 +67,56 @@ namespace Proyecto1_Compi2.Instrucciones
                     Expresion[] temp = (Expresion[])sim.valor;
                     int[] x = sim.posicion_X;
                     int calcularPos = int.Parse(posX.obtenerValor(ent).valor.ToString()) - x[0];
-                    temp[calcularPos] = resultado;
-                    sim.valor = temp;
-                    ent.setVariable(id,sim,ent);
+                    if (resultado.tipo == Simbolo.EnumTipoDato.OBJETO_TYPE)
+                    {
+                        Type_Object val = (Type_Object)resultado.valor;                        
+                        Type_Object ultima = (Type_Object)val.Clone();                                                    
+                        Entorno entornoTemp = new Entorno(null);
+                        foreach (String key in ultima.entObjeto.tablaSimbolos.Keys) {
+                            entornoTemp.tablaSimbolos.Add(key,ultima.entObjeto.tablaSimbolos[key]);
+                        }
+                        ultima.entObjeto = entornoTemp;                       
+                        Literal n = new Literal(resultado.tipo, ultima.Clone());
+                        temp[calcularPos] = n;
+                        sim.valor = temp;
+                        ent.setVariable(id, sim, ent);
+                    }
+                    else {
+                        temp[calcularPos] = resultado;
+                        sim.valor = temp;
+                        ent.setVariable(id, sim, ent);
+                    }                    
                 }
                 //Arreglo de dos dimensiones
                 else if (posX != null && posY != null && posZ == null)
-                {   
+                {
                     Expresion[] temp = (Expresion[])sim.valor;
                     int[] x = sim.posicion_X;
                     int[] y = sim.posicion_Y;
                     int calcularPosX = int.Parse(posX.obtenerValor(ent).valor.ToString()) - x[0];
                     int calcularPosY = int.Parse(posY.obtenerValor(ent).valor.ToString()) - y[0];
                     int posicionTotal = calcularPosX * ((y[1]- y[0])+1) + calcularPosY;
-                    temp[posicionTotal] = resultado;
-                    sim.valor = temp;
-                    ent.setVariable(id, sim, ent);
+                    if (resultado.tipo == Simbolo.EnumTipoDato.OBJETO_TYPE)
+                    {
+                        Type_Object val = (Type_Object)resultado.valor;
+                        Type_Object ultima = (Type_Object)val.Clone();
+                        Entorno entornoTemp = new Entorno(null);
+                        foreach (String key in ultima.entObjeto.tablaSimbolos.Keys)
+                        {
+                            entornoTemp.tablaSimbolos.Add(key, ultima.entObjeto.tablaSimbolos[key]);
+                        }
+                        ultima.entObjeto = entornoTemp;
+                        Literal n = new Literal(resultado.tipo, ultima.Clone());
+                        temp[posicionTotal] = n;
+                        sim.valor = temp;
+                        ent.setVariable(id, sim, ent);
+                    }
+                    else
+                    {
+                        temp[posicionTotal] = resultado;
+                        sim.valor = temp;
+                        ent.setVariable(id, sim, ent);
+                    }
 
                 }
                 //Arreglo de 3 dimensiones
@@ -89,9 +130,27 @@ namespace Proyecto1_Compi2.Instrucciones
                     int calcularPosY = int.Parse(posY.obtenerValor(ent).valor.ToString()) - y[0];
                     int calcularPosZ = int.Parse(posZ.obtenerValor(ent).valor.ToString()) - z[0];
                     int posicionTotal = calcularPosZ + ((z[1] - z[0])+1)*(calcularPosY + ((y[1] - y[0])+1)*calcularPosX);
-                    temp[posicionTotal] = resultado;
-                    sim.valor = temp;
-                    ent.setVariable(id, sim, ent);
+                    if (resultado.tipo == Simbolo.EnumTipoDato.OBJETO_TYPE)
+                    {
+                        Type_Object val = (Type_Object)resultado.valor;
+                        Type_Object ultima = (Type_Object)val.Clone();
+                        Entorno entornoTemp = new Entorno(null);
+                        foreach (String key in ultima.entObjeto.tablaSimbolos.Keys)
+                        {
+                            entornoTemp.tablaSimbolos.Add(key, ultima.entObjeto.tablaSimbolos[key]);
+                        }
+                        ultima.entObjeto = entornoTemp;
+                        Literal n = new Literal(resultado.tipo, ultima.Clone());
+                        temp[posicionTotal] = n;
+                        sim.valor = temp;
+                        ent.setVariable(id, sim, ent);
+                    }
+                    else
+                    {
+                        temp[posicionTotal] = resultado;
+                        sim.valor = temp;
+                        ent.setVariable(id, sim, ent);
+                    }
                 }
             }
             return new Retornar();

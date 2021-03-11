@@ -86,6 +86,14 @@ namespace Proyecto1_Compi2.Expresiones
             {
                 return new Literal(Simbolo.EnumTipoDato.DOUBLE, Double.Parse(valor.ToString()));
             }
+            else if (tipo == Tipo_operacion.TRUE )
+            {
+                return new Literal(Simbolo.EnumTipoDato.BOOLEAN, "true");
+            }
+            else if (tipo == Tipo_operacion.FALSE)
+            {
+                return new Literal(Simbolo.EnumTipoDato.BOOLEAN, "false");
+            }
             else if (tipo == Tipo_operacion.IDENTIFICADOR)
             {
                 Simbolo sim = ent.obtener(valor.ToString(), ent);
@@ -189,6 +197,8 @@ namespace Proyecto1_Compi2.Expresiones
             IGUAL_QUE,
             AND,
             OR,
+            TRUE,
+            FALSE,
             XOR,
             DIFERENTE,
             MENOR_IGUAL_QUE,

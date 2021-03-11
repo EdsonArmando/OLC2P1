@@ -32,15 +32,14 @@ namespace Proyecto1_Compi2.Instrucciones
             if (temp.entObjeto.tablaSimbolos.Count == 0) {
                 temp.Ejecutar(null,Ambito,null);
             }            
-            //temp.entObjeto.recorrer(temp.entObjeto);
             setExpresion(tempId, temp.entObjeto, resultado, Ambito);
             return new Retornar();
         }
 
 
         public void setExpresion(LinkedList<String> accesos, Entorno ent, Expresion res, String Ambito)
-        {
-            Simbolo sim = ent.obtener(accesos.ElementAt(0), ent);
+        {            
+            Simbolo sim = ent.obtener(accesos.ElementAt(0), ent);         
             if (sim.tipo == Simbolo.EnumTipoDato.OBJETO_TYPE && accesos.Count !=1)
             {
                 Type_Object temp = (Type_Object)sim.valor;
@@ -49,7 +48,6 @@ namespace Proyecto1_Compi2.Instrucciones
                 {
                     temp.Ejecutar(null, Ambito, null);
                 }
-                //temp.entObjeto.recorrer(temp.entObjeto);
                 setExpresion(accesos, temp.entObjeto,res,Ambito);
             }
             else {
@@ -57,17 +55,10 @@ namespace Proyecto1_Compi2.Instrucciones
                 {
                     Literal temp2 = (Literal)res;                    
                     ent.setVariable(accesos.ElementAt(0).ToLower(), new Simbolo(temp2.tipo, temp2.valor, temp2.id, temp2.ambito, temp2.referencia_const, temp2.posicion_X, temp2.posicion_Y, temp2.posicion_Z, temp2.tipoItem), ent); // Guardo la variable
-                    //ent.recorrer(ent);
                 }
                 else
                 {
-                    /*if (res.tipo == Simbolo.EnumTipoDato.OBJETO_TYPE)
-                    {
-                        Type_Object i = (Type_Object)res.valor;
-                        i.entObjeto.recorrer(i.entObjeto);
-                    }*/
                     ent.setVariable(accesos.ElementAt(0).ToLower(), new Simbolo(res.tipo, res.valor, accesos.ElementAt(0).ToLower(), Ambito, ""), ent);
-                    //ent.recorrer(ent);
                 }
             }
         }
