@@ -26,7 +26,7 @@ namespace Proyecto1_Compi2
         private void button2_Click(object sender, EventArgs e)
         {
             Form1.salidaConsola.Clear();
-            Sintactico analizador = new Sintactico();
+            SintacticoTraduccion analizador = new SintacticoTraduccion();
             string textAnalizar = richTextBox1.Text;
             analizador.traducir(textAnalizar);
         }

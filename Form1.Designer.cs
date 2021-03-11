@@ -48,7 +48,7 @@ namespace Proyecto1_Compi2
             this.richTextBox1.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.richTextBox1.ForeColor = System.Drawing.Color.White;
-            this.richTextBox1.Location = new System.Drawing.Point(43, 12);
+            this.richTextBox1.Location = new System.Drawing.Point(57, 12);
             this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(886, 502);
@@ -75,7 +75,7 @@ namespace Proyecto1_Compi2
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(933, 57);
+            this.label2.Location = new System.Drawing.Point(951, 56);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(162, 15);

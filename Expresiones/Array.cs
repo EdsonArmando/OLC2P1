@@ -111,7 +111,7 @@ namespace Proyecto1_Compi2.Expresiones
             }
             return str;
         }
-        private Simbolo.EnumTipoDato devTipoDato(String actual)
+        public Simbolo.EnumTipoDato devTipoDato(String actual)
         {
             string valor = actual.ToString().Split(' ')[0];
             switch (valor.ToLower())

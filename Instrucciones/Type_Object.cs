@@ -36,7 +36,15 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
-            throw new NotImplementedException();
+            StringBuilder var = new StringBuilder();
+            StringBuilder inss = new StringBuilder();
+            foreach (Instruccion ins in listaVariables) {               
+                var.Append("\t" + ins.TraducirInstr(ent,inss,Ambito));
+                inss.Clear();
+            }
+            str.Clear();
+            str.Append("type \n \t" + nombreType + " = object \n" +  var.ToString() +"end;");
+            return str.Append("\n");
         }
     }
 }

@@ -17,50 +17,56 @@ namespace Proyecto1_Compi2.Instrucciones
         public int fila, columna;
         public String esReferencia_const;
         public String nameArra;
+        public String tipoDinamico;
 
-        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna)
+        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna,String tip)
         {
             this.tipoVariable = tipo;
             this.nombreVariable = nombre;
             this.expresion = expresion;
+            this.tipoDinamico = tip;
             this.fila = fila;
             this.columna = columna;
         }
-        public Declaracion(Simbolo.EnumTipoDato tipo, LinkedList<Expresion> valores, Expresion expresion, int fila, int columna, String esreferencia)
+        public Declaracion(Simbolo.EnumTipoDato tipo, LinkedList<Expresion> valores, Expresion expresion, int fila, int columna, String esreferencia,String tip)
         {
             this.tipoVariable = tipo;
+            this.tipoDinamico = tip;
             this.expresion = expresion;
             this.fila = fila;
             this.columna = columna;
             this.variables = valores;
             this.esReferencia_const = esreferencia;
         }
-        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna,String esReferencia_const)
+        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna,String esReferencia_const, String tipoDi)
         {
             this.tipoVariable = tipo;
+            this.tipoDinamico = tipoDi;
             this.nombreVariable = nombre;
             this.expresion = expresion;
             this.fila = fila;
             this.columna = columna;
             this.esReferencia_const = esReferencia_const;
         }
-        public Declaracion(Simbolo.EnumTipoDato tipo, LinkedList<Expresion> valores, Expresion expresion, int fila, int columna, String esReferencia_const,String nameArray)
+        public Declaracion(Simbolo.EnumTipoDato tipo, LinkedList<Expresion> valores, Expresion expresion, int fila, int columna, String esReferencia_const,String nameArray, String tipoDi)
         {
             this.tipoVariable = tipo;
             this.variables = valores;
             this.expresion = expresion;
             this.fila = fila;
+            this.tipoDinamico = tipoDi;
             this.columna = columna;
             this.esReferencia_const = esReferencia_const;
             this.nameArra = nameArray;
         }
-        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna, String esReferencia_const, String nameArray)
+        public Declaracion(Simbolo.EnumTipoDato tipo, String nombre, Expresion expresion, int fila, int columna, String esReferencia_const, String nameArray,String tipoDi)
         {
             this.tipoVariable = tipo;
             this.nombreVariable = nombre;
             this.expresion = expresion;
             this.fila = fila;
             this.columna = columna;
+            this.tipoDinamico = tipoDi;
             this.esReferencia_const = esReferencia_const;
             this.nameArra = nameArray;
         }
@@ -150,7 +156,88 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
-            throw new NotImplementedException();
+            if (esReferencia_const.ToLower() == "const") {
+                StringBuilder uno = new StringBuilder();
+                str.Append("const " + nombreVariable + " =" + expresion.Traducir(ent,uno) + ";");
+                str.Append("\n");
+                return str;
+            }
+            if (expresion == null)
+            {
+                if (variables == null)
+                {
+                    if (nameArra == null || nameArra == "")
+                    {
+                        str.Append("var " + nombreVariable + " :" + tipoDinamico.ToUpper() + " ;");
+                        str.Append("\n");
+                    }
+                    else
+                    {
+                        str.Append("var " + nombreVariable + " :" + nameArra.ToUpper() + " ;");
+                        str.Append("\n");
+                    }
+                }
+                else
+                {
+                    StringBuilder temp = new StringBuilder();
+
+                    str.Append("Var ");
+                    foreach (Id expr in variables)
+                    {
+                        temp = expr.Traducir(ent, temp);
+                        temp.Append(",");
+                    }
+                    temp.Remove(temp.Length - 1, 1);
+                    if (nameArra == null || nameArra == "")
+                    {
+                        str.Append(temp.ToString() + " : " + tipoDinamico.ToUpper() + ";");          
+                    }
+                    else
+                    {
+                        str.Append(temp.ToString() + " : " + nameArra.ToUpper() + ";");
+                    }
+                    temp.Clear();
+                }
+            }
+            else {
+                if (variables == null)
+                {
+                    StringBuilder result = new StringBuilder();
+                    if (nameArra == null || nameArra == "")
+                    {
+                        str.Append("var " + nombreVariable + " :" + tipoDinamico.ToUpper() + " =" + expresion.Traducir(ent, result) + " ;");
+                        str.Append("\n");
+                    }
+                    else
+                    {
+                        str.Append("var " + nombreVariable + " :" + nameArra.ToUpper() + " =" + expresion.Traducir(ent, result) + " ;");
+                        str.Append("\n");
+                    }
+                }
+                else
+                {
+                    StringBuilder temp = new StringBuilder();
+                    StringBuilder result = new StringBuilder();
+                    str.Append("Var ");
+                    foreach (Id expr in variables)
+                    {
+                        temp = expr.Traducir(ent, temp);
+                        temp.Append(",");
+                    }
+                    temp.Remove(temp.Length - 1, 1);
+                    if (nameArra == null || nameArra == "")
+                    {
+                        
+                        str.Append(temp.ToString() + " : " + tipoDinamico.ToUpper() + " =" + expresion.Traducir(ent,result) + ";");  
+                    }
+                    else
+                    {
+                        str.Append(temp.ToString() + " : " + nameArra.ToUpper() + " =" + expresion.Traducir(ent, result.Clear()) + ";");
+                    }
+                    temp.Clear();
+                }
+            }            
+            return str.Append("\n") ;
         }
     }
 }

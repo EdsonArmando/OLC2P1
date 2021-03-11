@@ -36,7 +36,7 @@ namespace Proyecto1_Compi2.Reportes
             archivo.Write(text);
             archivo.Write("\n}");
             archivo.Close();
-            ejecutar(@"dot -Tsvg C:\\compiladores2\\AST.dot -o C:\\compiladores2\\AST.svg");
+            //ejecutar(@"dot -Tsvg C:\\compiladores2\\AST.dot -o C:\\compiladores2\\AST.svg");
             
         }
         static void ejecutar(string _Command)

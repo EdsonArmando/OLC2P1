@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Analizadores
 {
-    class Sintactico
+    class SintacticoTraduccion
     {
         private int fila = 0;
         private LinkedList<Type_Object> types = new LinkedList<Type_Object>();
@@ -45,7 +45,7 @@ namespace Proyecto1_Compi2.Analizadores
                 System.Text.StringBuilder entradaTradducida = new System.Text.StringBuilder();
                 foreach (Abstracto.Instruccion ins in AST)
                 {
-                    ins.Ejecutar(ent, "global", this);
+                    ins.TraducirInstr(ent, entradaTradducida,"global");
                 }
             }
         }
@@ -262,7 +262,7 @@ namespace Proyecto1_Compi2.Analizadores
                         return temp;
                     }
                 case "types_object":
-                    Singleton.getInstance().insertType(new Type_Object(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
+                    instrucciones.AddLast(new Type_Object(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
                     return null;
                 case "procedure":
                     ParseTreeNode procedure = actual.ChildNodes.ElementAt(0);
