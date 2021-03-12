@@ -39,8 +39,8 @@ namespace Proyecto1_Compi2.Analizadores
                 GraficarAST graficar = new GraficarAST(raiz);
                 //graficar.recorrerRaiz(raiz);
                 //graficar.generarArchivo();
-                Form1.salidaConsola.AppendText("Se analizo correctamente\n");
-                LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
+                Form1.salidaConsola.AppendText("program traducido;\n");
+                LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(3));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
                 System.Text.StringBuilder entradaTradducida = new System.Text.StringBuilder();
                 foreach (Abstracto.Instruccion ins in AST)
@@ -75,8 +75,8 @@ namespace Proyecto1_Compi2.Analizadores
                 GraficarAST graficar = new GraficarAST(raiz);
                 //graficar.recorrerRaiz(raiz);
                 //graficar.generarArchivo();
-                Form1.salidaConsola.AppendText("Se analizo correctamente\n");
-                LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(0));
+                Form1.salidaConsola.AppendText("program traducido;\n");
+                LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(3));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
                 System.Text.StringBuilder entradaTradducida = new System.Text.StringBuilder();
                 foreach (Abstracto.Instruccion ins in AST)
@@ -246,7 +246,7 @@ namespace Proyecto1_Compi2.Analizadores
                                 Abstracto.Instruccion nuevo = instruccion(funcion.ChildNodes.ElementAt(8).ChildNodes.ElementAt(i), funcionHija, funcion.ChildNodes.ElementAt(3), instrucciones);
                             }
                         }
-                        temp = new Funcion(funcionHija, listInstr2Temp(funcion.ChildNodes.ElementAt(3)), Listainstrucciones(funcion.ChildNodes.ElementAt(10)), Listainstrucciones2(funcion.ChildNodes.ElementAt(8)));
+                        temp = new Funcion(funcionHija, listInstr2Temp(funcion.ChildNodes.ElementAt(3)), Listainstrucciones(funcion.ChildNodes.ElementAt(10)), Listainstrucciones2(funcion.ChildNodes.ElementAt(8)), funcion.ChildNodes.ElementAt(1).ToString().Split(' ')[0]);
                         instrucciones.AddFirst(temp);
                         return temp;
                     }
@@ -259,7 +259,7 @@ namespace Proyecto1_Compi2.Analizadores
                                 instruccion(funcion.ChildNodes.ElementAt(5).ChildNodes.ElementAt(i), funcionHija, ListaParametrosPadre, instrucciones);
                             }
                         }
-                        temp = new Funcion(funcionHija, null, Listainstrucciones(funcion.ChildNodes.ElementAt(7)), Listainstrucciones2(funcion.ChildNodes.ElementAt(5)));
+                        temp = new Funcion(funcionHija, null, Listainstrucciones(funcion.ChildNodes.ElementAt(7)), Listainstrucciones2(funcion.ChildNodes.ElementAt(5)), funcion.ChildNodes.ElementAt(1).ToString().Split(' ')[0]);
                         instrucciones.AddFirst(temp);
                         return temp;
                     }
@@ -291,7 +291,7 @@ namespace Proyecto1_Compi2.Analizadores
                                 Abstracto.Instruccion nuevo = instruccion(procedure.ChildNodes.ElementAt(6).ChildNodes.ElementAt(i), ProcedureHija, procedure.ChildNodes.ElementAt(3), instrucciones);
                             }
                         }
-                        temp2 = new Procedure(ProcedureHija, listInstr2Temp(procedure.ChildNodes.ElementAt(3)), Listainstrucciones(procedure.ChildNodes.ElementAt(8)), Listainstrucciones2(procedure.ChildNodes.ElementAt(6)), 1, 1);
+                        temp2 = new Procedure(ProcedureHija, listInstr2Temp(procedure.ChildNodes.ElementAt(3)), Listainstrucciones(procedure.ChildNodes.ElementAt(8)), Listainstrucciones2(procedure.ChildNodes.ElementAt(6)), 1, 1, procedure.ChildNodes.ElementAt(1).ToString().Split(' ')[0]);
                         instrucciones.AddFirst(temp2);
                         return temp2;
                     }
@@ -304,7 +304,7 @@ namespace Proyecto1_Compi2.Analizadores
                                 Abstracto.Instruccion nuevo = instruccion(procedure.ChildNodes.ElementAt(3).ChildNodes.ElementAt(i), ProcedureHija, ListaParametrosPadre, instrucciones);
                             }
                         }
-                        temp2 = new Procedure(ProcedureHija, null, Listainstrucciones(procedure.ChildNodes.ElementAt(5)), Listainstrucciones2(procedure.ChildNodes.ElementAt(3)), 1, 1);
+                        temp2 = new Procedure(ProcedureHija, null, Listainstrucciones(procedure.ChildNodes.ElementAt(5)), Listainstrucciones2(procedure.ChildNodes.ElementAt(3)), 1, 1,procedure.ChildNodes.ElementAt(1).ToString().Split(' ')[0]);
                         instrucciones.AddFirst(temp2);
                         return temp2;
                     }
@@ -528,6 +528,10 @@ namespace Proyecto1_Compi2.Analizadores
             {
                 return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.AND);
             }
+            else if (tokenOperador.Equals("mod"))
+            {
+                return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.MOD);
+            }
             else if (tokenOperador.Equals("or"))
             {
                 return new Arimetica(expresion_logica(actual.ChildNodes.ElementAt(0)), expresion_logica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.OR);
@@ -571,7 +575,7 @@ namespace Proyecto1_Compi2.Analizadores
                         return new Arimetica(expresion_numerica(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(2)), Arimetica.Tipo_operacion.DIVISION);
                     default:
                         if (tokenOperador.Equals(">") || tokenOperador.Equals("<") || tokenOperador.Equals(">=") || tokenOperador.Equals("<=") || tokenOperador.Equals("=")
-                        || tokenOperador.Equals("and") || tokenOperador.Equals("<>") || tokenOperador.Equals("or") || tokenOperador.Equals("^") || tokenOperador.Equals("not"))
+                        || tokenOperador.Equals("mod") || tokenOperador.Equals("and") || tokenOperador.Equals("<>") || tokenOperador.Equals("or") || tokenOperador.Equals("^") || tokenOperador.Equals("not"))
                         {
                             return expresion_logica(actual);
                         }

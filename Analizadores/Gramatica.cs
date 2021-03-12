@@ -28,6 +28,7 @@ namespace Proyecto1_Compi2.Analizadores
             var Twriteln = ToTerm("writeln");
             var tRepeat = ToTerm("repeat");
             var tObject = ToTerm("object");
+            var tProgram = ToTerm("program");
             var tArray = ToTerm("array");
             var tUntil = ToTerm("until");
             var tConst = ToTerm("const");
@@ -64,9 +65,9 @@ namespace Proyecto1_Compi2.Analizadores
             var POW = ToTerm("^");
             var DIVIDIDO = ToTerm("/");
             var tAnd = ToTerm("and");
+            var tMod = ToTerm("mod");
             var tOr = ToTerm("or");
             var tDifQ = ToTerm("not");
-            var tDobleIgual = ToTerm("==");
             var tMayorQ = ToTerm(">");
             var tmayorIgual = ToTerm(">=");
             var tmenorIgual = ToTerm("<=");
@@ -77,7 +78,7 @@ namespace Proyecto1_Compi2.Analizadores
             RegisterOperators(1, MAS, MENOS);
             RegisterOperators(2, POR, DIVIDIDO, POW);
             RegisterOperators(3, tMayorQ, tMenorQ, tmenorIgual, tmayorIgual, tDiferenciacion);
-            RegisterOperators(4, tOr, tAnd, tDifQ);
+            RegisterOperators(4, tOr, tAnd, tDifQ, tMod);
 
             #endregion
 
@@ -112,7 +113,7 @@ namespace Proyecto1_Compi2.Analizadores
             #endregion
 
             #region Gramatica
-            ini.Rule = listInstr;
+            ini.Rule = tProgram + tId + PTCOMA + listInstr;
 
             listInstr.Rule = MakePlusRule(listInstr, instruccion)
                              | Empty;
@@ -229,6 +230,7 @@ namespace Proyecto1_Compi2.Analizadores
                 | expresion + tmenorIgual+ expresion
                 | expresion + tmayorIgual + expresion
                 | expresion + IGUAL + expresion
+                | expresion + tMod + expresion
                 | expresion + tOr + expresion
                 | expresion + tAnd + expresion
                 | tDifQ + expresion

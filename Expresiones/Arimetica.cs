@@ -165,6 +165,10 @@ namespace Proyecto1_Compi2.Expresiones
             {
                 return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor == (Double)operadorDer.obtenerValor(ent).valor);
             }
+            else if (tipo == Tipo_operacion.MOD)
+            {
+                return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor % (Double)operadorDer.obtenerValor(ent).valor);
+            }
             else if (tipo == Tipo_operacion.MENOR_QUE)
             {
                 return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor < (Double)operadorDer.obtenerValor(ent).valor);
@@ -266,6 +270,10 @@ namespace Proyecto1_Compi2.Expresiones
             {
                 return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " < " + operadorDer.Traducir(ent, tempDere).ToString());
             }
+            else if (tipo == Tipo_operacion.MOD)
+            {
+                return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " % " + operadorDer.Traducir(ent, tempDere).ToString());
+            }
             else if (tipo == Tipo_operacion.MENOR_IGUAL_QUE)
             {
                 return str.Append(operadorIzq.Traducir(ent, temp).ToString() + " <= " + operadorDer.Traducir(ent, tempDere).ToString());
@@ -295,6 +303,7 @@ namespace Proyecto1_Compi2.Expresiones
             MENOR_QUE,
             IGUAL_QUE,
             AND,
+            MOD,
             OR,
             TRUE,
             FALSE,

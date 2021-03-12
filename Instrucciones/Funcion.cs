@@ -16,12 +16,14 @@ namespace Proyecto1_Compi2.Instrucciones
         public LinkedList<Abstracto.Expresion> param_Actuales;
         public LinkedList<Instruccion> listInstrucciones;
         public LinkedList<Instruccion> listVarLocales;
-        public Funcion(String id, LinkedList<Instruccion> param_Formales, LinkedList<Instruccion> listInstrucciones, LinkedList<Instruccion> listVarLocales)
+        public String nombreOriginal;
+        public Funcion(String id, LinkedList<Instruccion> param_Formales, LinkedList<Instruccion> listInstrucciones, LinkedList<Instruccion> listVarLocales, String nombreOri)
         {
             this.id = id;
             this.param_Formales = param_Formales;
             this.listInstrucciones = listInstrucciones;
             this.listVarLocales = listVarLocales;
+            this.nombreOriginal = nombreOri;
         }
 
         public Retornar Ejecutar(Entorno ent, String ambito, Sintactico AST)
@@ -105,6 +107,7 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
+            LlamadaFuncion llamada = new LlamadaFuncion(null, null, 0, 0);
             StringBuilder temp = new StringBuilder();
             str.Append("function " + id + "(");
             if (param_Formales != null && param_Formales.Count != 0)
@@ -127,8 +130,18 @@ namespace Proyecto1_Compi2.Instrucciones
             temp.Clear();
             foreach (Instruccion ins in listInstrucciones)
             {
-                temp.Append("\n\t");
-                temp = ins.TraducirInstr(ent, temp, Ambito);
+                if (ins.GetType() == llamada.GetType())
+                {
+                    llamada = (LlamadaFuncion)ins;                    
+                    llamada.setNombre(id + "_" + llamada.id);
+                    temp.Append("\n\t");
+                    temp = llamada.TraducirInstr(ent, temp, Ambito);
+                }
+                else
+                {
+                    temp.Append("\n\t");
+                    temp = ins.TraducirInstr(ent, temp, Ambito);
+                }
             }
             str.Append(temp.ToString() + "\nend;");
             return str;

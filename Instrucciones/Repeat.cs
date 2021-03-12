@@ -18,12 +18,14 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
+            bool seguiWhile = false;
             do {
                 foreach (Instruccion ins in listaIntr)
                 {
                     Retornar contenido = ins.Ejecutar(ent, Ambito, AST);
                     if (contenido.isBreak)
-                    {         
+                    {
+                        seguiWhile = true;
                         return contenido;
                     }
                     if (contenido.isContinue)
@@ -36,7 +38,7 @@ namespace Proyecto1_Compi2.Instrucciones
                         return contenido;
                     }
                 }
-            } while (!(Boolean)condicion.obtenerValor(ent).valor);            
+            } while (!(Boolean)condicion.obtenerValor(ent).valor && !seguiWhile);            
                 return new Retornar();
         }
 

@@ -4,6 +4,7 @@ using Proyecto1_Compi2.Entornos;
 using Proyecto1_Compi2.Expresiones;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -17,7 +18,9 @@ namespace Proyecto1_Compi2.Instrucciones
         public LinkedList<Abstracto.Instruccion> param_Formales;
         public LinkedList<Instruccion> listInstrucciones;
         public LinkedList<Instruccion> listVarLocales;
-        public Procedure(String id, LinkedList<Abstracto.Instruccion> param_Formales, LinkedList<Instruccion> listInstrucciones, LinkedList<Instruccion> listVarLocales,int fila, int columna)
+        public String nombreOriginal;
+
+        public Procedure(String id, LinkedList<Abstracto.Instruccion> param_Formales, LinkedList<Instruccion> listInstrucciones, LinkedList<Instruccion> listVarLocales,int fila, int columna,String nombreOriginal)
         {
             this.id = id;
             this.param_Formales = param_Formales;
@@ -25,6 +28,7 @@ namespace Proyecto1_Compi2.Instrucciones
             this.listVarLocales = listVarLocales;
             this.fila = fila;
             this.columna = columna;
+            this.nombreOriginal = nombreOriginal;
         }
         public Retornar Ejecutar(Entorno ent, String ambito, Sintactico AST)
         {
@@ -111,6 +115,7 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
+            LlamadaFuncion llamada = new LlamadaFuncion(null,null,0,0);
             StringBuilder temp = new StringBuilder();
             str.Append("procedure " + id + "(");
             if (param_Formales != null && param_Formales.Count != 0 ) {
@@ -131,8 +136,17 @@ namespace Proyecto1_Compi2.Instrucciones
             temp.Clear();
             foreach (Instruccion ins in listInstrucciones)
             {
-                temp.Append("\n\t");
-                temp = ins.TraducirInstr(ent, temp, Ambito);
+                if (ins.GetType() == llamada.GetType())
+                {
+                    llamada = (LlamadaFuncion)ins;
+                    llamada.setNombre(id + "_" + llamada.id);
+                    temp.Append("\n\t");
+                    temp = llamada.TraducirInstr(ent, temp, Ambito);
+                }
+                else {
+                    temp.Append("\n\t");
+                    temp = ins.TraducirInstr(ent, temp, Ambito);
+                }                                        
             }
             str.Append(temp.ToString() + "\nend;");
             return str;

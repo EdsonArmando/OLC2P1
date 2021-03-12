@@ -9,7 +9,7 @@ namespace Proyecto1_Compi2.Instrucciones
 {
     class LlamadaFuncion : Expresion, Instruccion
     {
-        String id;
+        public String id;
         LinkedList<Expresion> parametros;
         public LlamadaFuncion(String id, LinkedList<Expresion> parametros, int fila, int columna)
         {
@@ -60,7 +60,9 @@ namespace Proyecto1_Compi2.Instrucciones
             strin.Append(id+ "(" + val.ToString() + ")");
             return strin;
         }
-
+        public void setNombre(String nuevoNombre) {
+            this.id = nuevoNombre;
+        }
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
             StringBuilder temp = new StringBuilder();
