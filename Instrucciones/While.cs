@@ -45,7 +45,16 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
-            throw new NotImplementedException();
-        }
+            StringBuilder temp = new StringBuilder();
+            str.Append("\nwhile(" + condicion.Traducir(ent,temp) + ") do \n\t begin");
+            temp.Clear();
+            foreach (Instruccion ins in listaIntr)
+            {
+                temp.Append("\n\t");
+                temp = ins.TraducirInstr(ent, temp, Ambito);
+            }
+            str.Append(temp.ToString() + "\rend;");
+            return str;
+        }         
     }
 }

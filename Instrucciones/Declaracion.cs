@@ -237,7 +237,7 @@ namespace Proyecto1_Compi2.Instrucciones
                     temp.Clear();
                 }
             }            
-            return str.Append("\n") ;
+            return str.Append("") ;
         }
     }
 }

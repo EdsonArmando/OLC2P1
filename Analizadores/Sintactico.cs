@@ -443,15 +443,15 @@ namespace Proyecto1_Compi2.Analizadores
                 case "case":
                     if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 6)
                     {
-                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
+                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)),true));
                     }
                     else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 8)
                     {
-                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5))));
+                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)),false));
                     }
                     return null;
                 case "instrcase":
-                    instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2))));
+                    instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), true));
                     return null;
                 case "listid":
                     instrucciones.AddLast(new AsignacionTypeObjcet(listIds(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(3))));

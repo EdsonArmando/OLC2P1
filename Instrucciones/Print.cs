@@ -41,7 +41,6 @@ namespace Proyecto1_Compi2.Instrucciones
             }
             temp.Remove(temp.Length - 1, 1);
             str.Append("writeln( " + temp.ToString() + " );");
-            str.Append("\n");
             return str;
         }
     }

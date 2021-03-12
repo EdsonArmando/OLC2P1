@@ -162,20 +162,17 @@ namespace Proyecto1_Compi2.Instrucciones
             if (posX == null && posY == null && posZ == null)
             {
                 str.Append(id + " := " + valor.Traducir(ent, expr) + ";");
-                str.Append("\n");
                 return str;
             }
             if (posX != null && posY == null && posZ == null)
             {
                 str.Append(id + " [" + posX.Traducir(ent,expr) + "]" + ":= " + valor.Traducir(ent, expr.Clear()) + ";");
-                str.Append("\n");
                 return str;
             }
             //Arreglo de dos dimensiones
             else if (posX != null && posY != null && posZ == null)
             {
                 str.Append(id + " [" + posX.Traducir(ent, expr) + "," + posY.Traducir(ent, expr.Clear()) + "]" + ":= " + valor.Traducir(ent, expr.Clear()) + ";");
-                str.Append("\n");
                 return str;
 
             }
@@ -183,7 +180,6 @@ namespace Proyecto1_Compi2.Instrucciones
             else if (posX != null && posY != null && posZ != null)
             {
                 str.Append(id + " [" + posX.Traducir(ent, expr) + "," + posY.Traducir(ent, expr.Clear()) + "," + posZ.Traducir(ent, expr.Clear()) + "]" + ":= " + valor.Traducir(ent, expr.Clear()) + ";");
-                str.Append("\n");
                 return str;
 
             }

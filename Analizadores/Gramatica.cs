@@ -126,6 +126,7 @@ namespace Proyecto1_Compi2.Analizadores
                                 | LLAMADAFUNCION + PTCOMA
                                 | Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
                                 | FOR
+                                | IF
                                 | INSTRCASE
                                 | WHILE
                                 | CASE

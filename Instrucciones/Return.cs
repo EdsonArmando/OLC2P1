@@ -23,7 +23,9 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
-            throw new NotImplementedException();
+            StringBuilder temp = new StringBuilder();
+            str.Append("exit(" + valorReturn.Traducir(ent, temp) + ");");
+            return str;
         }
     }
 }

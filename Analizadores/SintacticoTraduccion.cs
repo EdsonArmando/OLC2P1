@@ -45,7 +45,8 @@ namespace Proyecto1_Compi2.Analizadores
                 System.Text.StringBuilder entradaTradducida = new System.Text.StringBuilder();
                 foreach (Abstracto.Instruccion ins in AST)
                 {
-                    ins.TraducirInstr(ent, entradaTradducida,"global");
+                    entradaTradducida = ins.TraducirInstr(ent, entradaTradducida,"global");
+                    entradaTradducida.Append("\n");
                 }
             }
         }
@@ -81,6 +82,7 @@ namespace Proyecto1_Compi2.Analizadores
                 foreach (Abstracto.Instruccion ins in AST)
                 {
                     entradaTradducida = ins.TraducirInstr(ent, entradaTradducida, "global");
+                    entradaTradducida.Append("\n");
                 }
                 Form1.salidaConsola.AppendText(entradaTradducida.ToString());
             }
@@ -245,7 +247,7 @@ namespace Proyecto1_Compi2.Analizadores
                             }
                         }
                         temp = new Funcion(funcionHija, listInstr2Temp(funcion.ChildNodes.ElementAt(3)), Listainstrucciones(funcion.ChildNodes.ElementAt(10)), Listainstrucciones2(funcion.ChildNodes.ElementAt(8)));
-                        instrucciones.AddLast(temp);
+                        instrucciones.AddFirst(temp);
                         return temp;
                     }
                     else
@@ -258,7 +260,7 @@ namespace Proyecto1_Compi2.Analizadores
                             }
                         }
                         temp = new Funcion(funcionHija, null, Listainstrucciones(funcion.ChildNodes.ElementAt(7)), Listainstrucciones2(funcion.ChildNodes.ElementAt(5)));
-                        instrucciones.AddLast(temp);
+                        instrucciones.AddFirst(temp);
                         return temp;
                     }
                 case "types_object":
@@ -290,7 +292,7 @@ namespace Proyecto1_Compi2.Analizadores
                             }
                         }
                         temp2 = new Procedure(ProcedureHija, listInstr2Temp(procedure.ChildNodes.ElementAt(3)), Listainstrucciones(procedure.ChildNodes.ElementAt(8)), Listainstrucciones2(procedure.ChildNodes.ElementAt(6)), 1, 1);
-                        instrucciones.AddLast(temp2);
+                        instrucciones.AddFirst(temp2);
                         return temp2;
                     }
                     else
@@ -303,7 +305,7 @@ namespace Proyecto1_Compi2.Analizadores
                             }
                         }
                         temp2 = new Procedure(ProcedureHija, null, Listainstrucciones(procedure.ChildNodes.ElementAt(5)), Listainstrucciones2(procedure.ChildNodes.ElementAt(3)), 1, 1);
-                        instrucciones.AddLast(temp2);
+                        instrucciones.AddFirst(temp2);
                         return temp2;
                     }
                 case "writeln":
@@ -443,15 +445,15 @@ namespace Proyecto1_Compi2.Analizadores
                 case "case":
                     if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 6)
                     {
-                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3))));
+                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)),true));
                     }
                     else if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 8)
                     {
-                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5))));
+                        instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(3)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(5)),false));
                     }
                     return null;
                 case "instrcase":
-                    instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2))));
+                    instrucciones.AddLast(new Case(expresion_numerica(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(0)), Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(2)), true));
                     return null;
                 case "listid":
                     instrucciones.AddLast(new AsignacionTypeObjcet(listIds(actual.ChildNodes.ElementAt(0)), expresion_numerica(actual.ChildNodes.ElementAt(3))));

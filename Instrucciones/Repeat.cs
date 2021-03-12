@@ -18,15 +18,12 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
-            bool seguirWhile = true;
-            while (!(Boolean)condicion.obtenerValor(ent).valor && seguirWhile)
-            {
+            do {
                 foreach (Instruccion ins in listaIntr)
                 {
-                    Retornar contenido = ins.Ejecutar(ent,Ambito, AST);
+                    Retornar contenido = ins.Ejecutar(ent, Ambito, AST);
                     if (contenido.isBreak)
-                    {
-                        seguirWhile = false;
+                    {         
                         return contenido;
                     }
                     if (contenido.isContinue)
@@ -39,7 +36,7 @@ namespace Proyecto1_Compi2.Instrucciones
                         return contenido;
                     }
                 }
-            }
+            } while (!(Boolean)condicion.obtenerValor(ent).valor);            
                 return new Retornar();
         }
 
@@ -50,7 +47,16 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
-            throw new NotImplementedException();
+            StringBuilder temp = new StringBuilder();
+            str.Append("repeat ");
+            temp.Clear();
+            foreach (Instruccion ins in listaIntr)
+            {
+                temp.Append("\n\t");
+                temp = ins.TraducirInstr(ent, temp, Ambito);
+            }
+            str.Append(temp.ToString() + "\n\runtil " + condicion.Traducir(ent,temp.Clear()) + ";" );
+            return str;
         }
     }
 }

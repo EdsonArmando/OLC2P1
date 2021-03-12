@@ -111,7 +111,31 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
-            throw new NotImplementedException();
+            StringBuilder temp = new StringBuilder();
+            str.Append("procedure " + id + "(");
+            if (param_Formales != null && param_Formales.Count != 0 ) {
+                foreach (Instruccion ins in param_Formales)
+                {
+                    temp = ins.TraducirInstr(ent, temp, Ambito);
+                }
+                temp.Remove(temp.Length - 2, 1);
+            }            
+            str.Append(temp + ");\n");
+            temp.Clear();
+            foreach (Instruccion ins in listVarLocales)
+            {
+                temp.Append("\n\t");
+                temp = ins.TraducirInstr(ent, temp, Ambito);
+            }
+            str.Append(temp.ToString() + "\nbegin\n");
+            temp.Clear();
+            foreach (Instruccion ins in listInstrucciones)
+            {
+                temp.Append("\n\t");
+                temp = ins.TraducirInstr(ent, temp, Ambito);
+            }
+            str.Append(temp.ToString() + "\nend;");
+            return str;
         }
     }
 }

@@ -42,9 +42,9 @@ namespace Proyecto1_Compi2.Instrucciones
                 var.Append("\t" + ins.TraducirInstr(ent,inss,Ambito));
                 inss.Clear();
             }
-            str.Clear();
+            inss.Clear();
             str.Append("type \n \t" + nombreType + " = object \n" +  var.ToString() +"end;");
-            return str.Append("\n");
+            return str;
         }
     }
 }
