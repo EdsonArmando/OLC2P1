@@ -28,24 +28,46 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
+            bool Ejecutado = false;
             Expresion val = condicion.obtenerValor(ent);
             foreach (Case ins in Case_Instr) {
-                Expresion exprtemp = ins.condicion.obtenerValor(ent);
+                Expresion exprtemp = ins.condicion.obtenerValor(ent); ;                
                 if (exprtemp.valor.ToString() == val.valor.ToString()) {
-                    LinkedList<Instruccion> tempList = ins.Case_Instr;
-                    Retornar ret = tempList.ElementAt(0).Ejecutar(ent,Ambito,AST);
-                    return ret;
-                }
-            }
-            foreach (Instruccion ins in Else) {
-                Retornar ret = ins.Ejecutar(ent,Ambito,AST);
-                if (ret.isReturn) {
-                    return ret;
-                }
-            }
-            return new Retornar();
-        }
+                    Ejecutado = true;
+                    LinkedList<Instruccion> instruccionesCase = ins.Case_Instr;
+                    foreach (Instruccion inst in instruccionesCase) {
+                        Retornar contenido = inst.Ejecutar(ent, Ambito, AST);
+                        if (contenido.isBreak)
+                        {
+                            return contenido;
+                        }
+                        if (contenido.isContinue)
+                        {
+                            break;
+                        }
 
+                        if (contenido.isReturn)
+                        {
+                            return contenido;
+                        }
+                    }
+                }
+            }
+            if (Ejecutado == false) {
+                if (Else != null)
+                {
+                    foreach (Instruccion ins in Else)
+                    {
+                        Retornar ret = ins.Ejecutar(ent, Ambito, AST);
+                        if (ret.isReturn)
+                        {
+                            return ret;
+                        }
+                    }
+                }
+            }
+            return new Retornar(); ;
+        }
         public StringBuilder TraducirInstr(Entorno ent, StringBuilder str, string Ambito)
         {
             StringBuilder temp = new StringBuilder();
@@ -76,6 +98,11 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public String traducirCaseIndividual(Instruccion ins) {
             return "";
+        }
+
+        public Retornar Ejecutar(Entorno ent, string ambito, Sintactico aST, Expresion condicion)
+        {
+            throw new NotImplementedException();
         }
     }
 }

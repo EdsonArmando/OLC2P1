@@ -14,11 +14,13 @@ namespace Proyecto1_Compi2.Instrucciones
         Expresion valorInicio;
         Expresion valorFin;
         LinkedList<Instruccion> listaInstrucciones;
-        public For(String id, Expresion valorInicio, Expresion valorFin, LinkedList<Instruccion> listaInstr) {
+        bool descendente;
+        public For(String id, Expresion valorInicio, Expresion valorFin, LinkedList<Instruccion> listaInstr, bool desce) {
             this.id = id;
             this.valorInicio = valorInicio;
             this.valorFin = valorFin;
             listaInstrucciones = listaInstr;
+            this.descendente = desce;
         }
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
@@ -27,8 +29,18 @@ namespace Proyecto1_Compi2.Instrucciones
             Expresion valorNuevo = valorInicio.obtenerValor(ent);
             Simbolo sim = new Simbolo(temp.tipo, valorNuevo.valor,id,temp.ambito,temp.referencia_const);
             ent.setVariable(id,sim,ent);
-            Arimetica condicion = new Arimetica(new Arimetica(id,Arimetica.Tipo_operacion.IDENTIFICADOR),valorFin,Arimetica.Tipo_operacion.MENOR_QUE);
-            Aumento aumento = new Aumento(id);
+            Aumento aumento=null;
+            Decremento decremento=null;
+            Arimetica condicion = null;
+            if (descendente == false)
+            {
+                condicion = new Arimetica(new Arimetica(id, Arimetica.Tipo_operacion.IDENTIFICADOR), valorFin, Arimetica.Tipo_operacion.MENOR_IGUAL_QUE);
+                aumento = new Aumento(id);
+            }
+            else {
+                condicion = new Arimetica(new Arimetica(id, Arimetica.Tipo_operacion.IDENTIFICADOR), valorFin, Arimetica.Tipo_operacion.MAYOR_IGUAL_QUE);
+                decremento = new Decremento(id);
+            }        
             while ((Boolean)condicion.obtenerValor(ent).valor  && seguirFor)
             {
                 foreach (Instruccion ins in listaInstrucciones)
@@ -44,7 +56,13 @@ namespace Proyecto1_Compi2.Instrucciones
                         break;
                     }
                 }
-                aumento.Ejecutar(ent,Ambito,AST);
+                if (descendente == false)
+                {
+                    aumento.Ejecutar(ent, Ambito, AST);
+                }
+                else { 
+                    decremento.Ejecutar(ent, Ambito, AST);
+                }        
             }
             return new Retornar();
         }

@@ -7,19 +7,19 @@ using System.Text;
 
 namespace Proyecto1_Compi2.Instrucciones
 {
-    class Aumento : Instruccion
+    class Decremento : Instruccion
     {
         String id;
-        public Aumento(String id)
+        public Decremento(String id)
         {
             this.id = id;
         }
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
-            Simbolo variable = ent.obtener(id.ToLower(),ent);
-            int valAument = int.Parse(variable.valor.ToString().ToLower());
-            valAument = valAument + 1;
-            Simbolo sim = new Simbolo(variable.tipo, (object)valAument, id.ToLower(), variable.ambito,variable.referencia_const);
+            Simbolo variable = ent.obtener(id.ToLower(), ent);
+            int valAument = int.Parse(variable.valor.ToString());
+            valAument = valAument - 1;
+            Simbolo sim = new Simbolo(variable.tipo, (object)valAument, id.ToLower() ,variable.ambito, variable.referencia_const);
             ent.setVariable(id.ToLower(), sim, ent);
             return new Retornar();
         }

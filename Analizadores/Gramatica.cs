@@ -26,6 +26,7 @@ namespace Proyecto1_Compi2.Analizadores
             var twhile = ToTerm("while");
             var TFUNCTION = ToTerm("function");
             var Twriteln = ToTerm("writeln");
+            var Twrite = ToTerm("write");
             var tRepeat = ToTerm("repeat");
             var tObject = ToTerm("object");
             var tProgram = ToTerm("program");
@@ -34,6 +35,7 @@ namespace Proyecto1_Compi2.Analizadores
             var tConst = ToTerm("const");
             var tIf = ToTerm("if");
             var ttrue = ToTerm("true");
+            var tDown = ToTerm("downto");
             var tFalse = ToTerm("false");
             var tCase = ToTerm("case");
             var tType = ToTerm("type");
@@ -63,7 +65,7 @@ namespace Proyecto1_Compi2.Analizadores
             var IGUAL = ToTerm("=");
             var POR = ToTerm("*");
             var POW = ToTerm("^");
-            var DIVIDIDO = ToTerm("/");
+            var DIVIDIDO = ToTerm("div");
             var tAnd = ToTerm("and");
             var tMod = ToTerm("mod");
             var tOr = ToTerm("or");
@@ -126,6 +128,7 @@ namespace Proyecto1_Compi2.Analizadores
                                 | PROCEDURE                               
                                 | LLAMADAFUNCION + PTCOMA
                                 | Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
+                                | Twrite + PARIZQ + listExpr + PARDER + PTCOMA
                                 | FOR
                                 | IF
                                 | INSTRCASE
@@ -174,15 +177,19 @@ namespace Proyecto1_Compi2.Analizadores
                         | Empty
                       ;
             REPEAT.Rule = tRepeat + listInstr2 + tUntil + expresion + PTCOMA;
-            FOR.Rule = tFor + tId + PDOSPUNTOS + IGUAL + expresion + tTo + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA;
-            WHILE.Rule = twhile + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA;
+            FOR.Rule = tFor + tId + PDOSPUNTOS + IGUAL + expresion + tTo + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA
+                    | tFor + tId + PDOSPUNTOS + IGUAL + expresion + tDown + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA
+                           ;
+            WHILE.Rule = twhile + expresion + tDo + TBEGIN + listInstr2 + TEND + PTCOMA
+                        | twhile + expresion + tDo + listInstr2 + PTCOMA;
             ASIGNACION.Rule = tId + PDOSPUNTOS + IGUAL + expresion ;
-            INSTRCASE.Rule = expresion + PDOSPUNTOS +listInstr;
-            CASE.Rule = tCase + expresion + tOf + listInstr2+ TEND + PTCOMA
-                      | tCase + expresion + tOf + listInstr2 + tElse + listInstr2 + TEND + PTCOMA
+            INSTRCASE.Rule = expresion + PDOSPUNTOS +TBEGIN +  listInstr + TEND + PTCOMA;
+            CASE.Rule = tCase + expresion + tOf + listInstr2 + TEND + PTCOMA
+                      | tCase + expresion + tOf + listInstr2 + tElse + TBEGIN + listInstr2 + TEND + PTCOMA + TEND + PTCOMA
                         ;
             instruccion2.Rule = //Twriteln + PARIZQ + expresion + PARDER + PTCOMA
                                  Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
+                                | Twrite + PARIZQ + listExpr + PARDER + PTCOMA
                                 | returnFuncion
                                 | LLAMADAFUNCION + PTCOMA
                                 | IF
@@ -212,7 +219,7 @@ namespace Proyecto1_Compi2.Analizadores
                                 | TVAR + tId + PDOSPUNTOS + tId + IGUAL + expresion
                                 | TVAR + listExpr + PDOSPUNTOS + tId + IGUAL + expresion
                                 | TVAR + listExpr + PDOSPUNTOS + tId 
-                                | tConst + tId + IGUAL + expresion
+                                | tConst + tId + PDOSPUNTOS + tId + IGUAL + expresion
                                 | tId + PDOSPUNTOS + tId
                 ;
             ACCESOARRAY.Rule =   tId + CORIZQ + expresion + CORDER

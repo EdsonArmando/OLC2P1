@@ -25,7 +25,7 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
-            this.entObjeto = new Entorno(null);
+            this.entObjeto = new Entorno(ent);
             //Guardar Type en tabla de Simbolos
             foreach (Instruccion inst in listaVariables) {
                 inst.Ejecutar(this.entObjeto, Ambito,AST);

@@ -30,7 +30,7 @@ namespace Proyecto1_Compi2.Instrucciones
             Type_Object temp = (Type_Object)sim.valor;
             tempId.RemoveFirst();
             if (temp.entObjeto.tablaSimbolos.Count == 0) {
-                temp.Ejecutar(null,Ambito,null);
+                temp.Ejecutar(ent,Ambito,null);
             }            
             setExpresion(tempId, temp.entObjeto, resultado, Ambito);
             return new Retornar();

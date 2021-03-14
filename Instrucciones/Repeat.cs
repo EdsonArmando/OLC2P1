@@ -18,6 +18,7 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
+            bool cond;
             bool seguiWhile = false;
             do {
                 foreach (Instruccion ins in listaIntr)
@@ -38,6 +39,7 @@ namespace Proyecto1_Compi2.Instrucciones
                         return contenido;
                     }
                 }
+                cond = (Boolean)condicion.obtenerValor(ent).valor;
             } while (!(Boolean)condicion.obtenerValor(ent).valor && !seguiWhile);            
                 return new Retornar();
         }

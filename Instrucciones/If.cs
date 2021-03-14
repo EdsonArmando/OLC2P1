@@ -50,10 +50,7 @@ namespace Proyecto1_Compi2.Instrucciones
                         return retorn;
                     }
                 }
-                if (subIf != null)
-                {
-                    return subIf.Ejecutar(ent, Ambito, AST);
-                }
+                
             }
             else {
                 if (subIf != null)

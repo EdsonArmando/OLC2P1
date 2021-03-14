@@ -31,9 +31,19 @@ namespace Proyecto1_Compi2.Expresiones
             }
             //Acceso a un array de una dimension
             if (valor[0] != null && valor[1] == null && valor[2] == null) {
+                int calcularPos = 0;
                 Expresion[] temp = (Expresion[])sim.valor;
                 int[] x = sim.posicion_X;
-                int calcularPos = int.Parse(this.valor[0].obtenerValor(ent).valor.ToString()) - x[0];
+                Double val = Double.Parse(this.valor[0].obtenerValor(ent).valor.ToString()) - x[0];
+                bool isInt = val % 1 == 0;
+                if (isInt)
+                {
+                    calcularPos = int.Parse(this.valor[0].obtenerValor(ent).valor.ToString()) - x[0];
+                }
+                else {
+                    calcularPos = (int)Math.Ceiling(val);
+                }
+                
                 Expresion valor = temp[calcularPos];                
                 if (valor == null) {
                     return new Literal(Simbolo.EnumTipoDato.NULL,"");

@@ -43,6 +43,8 @@ namespace Proyecto1_Compi2.Expresiones
         {
             if (tipo == Tipo_operacion.DIVISION)
             {
+                Expresion izquierda = operadorIzq.obtenerValor(ent);
+                Expresion derecha = operadorDer.obtenerValor(ent);
                 return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor / (Double)operadorDer.obtenerValor(ent).valor);
             }
             else if (tipo == Tipo_operacion.MULTIPLICACION)
@@ -96,7 +98,7 @@ namespace Proyecto1_Compi2.Expresiones
             }
             else if (tipo == Tipo_operacion.IDENTIFICADOR)
             {
-                Simbolo sim = ent.obtener(valor.ToString(), ent);
+                Simbolo sim = ent.obtener(valor.ToString().ToLower(), ent);
                 if (Singleton.getInstance().existType(valor.ToString())) {
                     return new Literal(sim.tipo, Singleton.getInstance().getType(valor.ToString()));
                 }
@@ -111,6 +113,10 @@ namespace Proyecto1_Compi2.Expresiones
                 else if (sim.tipo == Simbolo.EnumTipoDato.TYPE)
                 {
                     return new Literal(sim.tipo, sim.valor);
+                }
+                else if (sim.tipo == Simbolo.EnumTipoDato.BOOLEAN)
+                {
+                    return new Literal(sim.tipo, bool.Parse(sim.valor.ToString()));
                 }
                 else if (sim.tipo == Simbolo.EnumTipoDato.STRING)
                 {
@@ -146,6 +152,8 @@ namespace Proyecto1_Compi2.Expresiones
             }
             else if (tipo == Tipo_operacion.AND)
             {
+                object uno = operadorIzq.obtenerValor(ent).valor.ToString();
+                object dos = operadorDer.obtenerValor(ent).valor.ToString();
                 return new Literal(Simbolo.EnumTipoDato.BOOLEAN, bool.Parse(operadorIzq.obtenerValor(ent).valor.ToString()) && bool.Parse(operadorDer.obtenerValor(ent).valor.ToString()));
             }
             else if (tipo == Tipo_operacion.OR)
@@ -171,6 +179,8 @@ namespace Proyecto1_Compi2.Expresiones
             }
             else if (tipo == Tipo_operacion.MENOR_QUE)
             {
+                Expresion izquierda = operadorIzq.obtenerValor(ent);
+                Expresion derecha = operadorDer.obtenerValor(ent);
                 return new Literal(Simbolo.EnumTipoDato.DOUBLE, (Double)operadorIzq.obtenerValor(ent).valor < (Double)operadorDer.obtenerValor(ent).valor);
             }
             else if (tipo == Tipo_operacion.MENOR_IGUAL_QUE)
