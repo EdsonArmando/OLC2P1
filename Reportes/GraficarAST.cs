@@ -32,11 +32,11 @@ namespace Proyecto1_Compi2.Reportes
             return null;
         }
         public void generarArchivo() {
-            StreamWriter archivo = new StreamWriter("C:\\compiladores2\\AST.dot");
+            StreamWriter archivo = new StreamWriter("C:\\compiladores2\\AST_201701029.dot");
             archivo.Write(text);
             archivo.Write("\n}");
             archivo.Close();
-            //ejecutar(@"dot -Tsvg C:\\compiladores2\\AST.dot -o C:\\compiladores2\\AST.svg");
+            ejecutar(@"dot -Tsvg C:\\compiladores2\\AST_201701029.dot -o C:\\compiladores2\\AST_201701029.svg");
             
         }
         static void ejecutar(string _Command)

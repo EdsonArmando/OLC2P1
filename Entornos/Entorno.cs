@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Proyecto1_Compi2.Entornos
@@ -68,6 +69,39 @@ namespace Proyecto1_Compi2.Entornos
                 setVariable(nombre.ToLower(),valor,ent.anterior);
                 return;
             }
+        }
+        public void Graficar(Entorno ent) {
+            Simbolo sim = null;
+             int conts = 1;
+            StreamWriter archivo = new StreamWriter("C:\\compiladores2\\TablaSimbolos_201701029.html");
+            archivo.Write("<html>");
+            archivo.Write("<head>");
+            archivo.Write("<style>"
+                    + "table{"
+                    + "  font-family: arial, sans-serif; border-collapse: collapse;    width: 100%;}"
+                    + "td, th{"
+                    + "border: 1px solid #dddddd;text-align: left;  padding: 8px;}"
+                    + "tr:nth-child(even){"
+                    + " background-color: #dddddd;}"
+                    + "</style>");
+            archivo.Write("</head>");
+            archivo.Write("<body>");
+            archivo.Write("<H1>Tabla de Simbolos</H1>");
+            archivo.Write("<br><br>");
+            archivo.Write("<table>");
+            archivo.Write("<tr><th>No</th><th>Nombre</th><th>Tipo</th><th>Ambito</th></tr>");
+            foreach (String key in ent.tablaSimbolos.Keys)
+            {
+                sim = (Simbolo)tablaSimbolos[key];
+                archivo.Write("<tr><td>" + conts + "</td><td>" + sim.id + "</td><td>" + sim.tipo + "</td><td>" + sim.ambito + "</td></tr>");
+                conts++;
+            }
+
+            archivo.Write("</table>");
+            archivo.Write("</body>");
+            archivo.Write("</html>");
+            archivo.Close();
+            
         }
         public void Insertar(string nombre, Simbolo valor)
         {

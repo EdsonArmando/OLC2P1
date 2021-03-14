@@ -316,6 +316,9 @@ namespace Proyecto1_Compi2.Analizadores
                 case "write":
                     instrucciones.AddLast(new Write(devListExpresiones(actual.ChildNodes.ElementAt(2)), 1, 1));
                     return null;
+                case "graficar_ts":
+                    instrucciones.AddLast(new GraficarTS());
+                    return null;
                 case "declaracion":
                     if (actual.ChildNodes.ElementAt(0).ChildNodes.Count == 4)
                     {

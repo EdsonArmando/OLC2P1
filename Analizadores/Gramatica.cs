@@ -34,6 +34,7 @@ namespace Proyecto1_Compi2.Analizadores
             var tUntil = ToTerm("until");
             var tConst = ToTerm("const");
             var tIf = ToTerm("if");
+            var tGraficats = ToTerm("graficar_ts");
             var ttrue = ToTerm("true");
             var tDown = ToTerm("downto");
             var tFalse = ToTerm("false");
@@ -125,10 +126,11 @@ namespace Proyecto1_Compi2.Analizadores
                                 | TYPES + PTCOMA
                                 | returnFuncion
                                 | listId + PDOSPUNTOS + IGUAL + expresion + PTCOMA
-                                | PROCEDURE                               
+                                | PROCEDURE
                                 | LLAMADAFUNCION + PTCOMA
                                 | Twriteln + PARIZQ + listExpr + PARDER + PTCOMA
                                 | Twrite + PARIZQ + listExpr + PARDER + PTCOMA
+                                | tGraficats + PARIZQ + PARDER + PTCOMA
                                 | FOR
                                 | IF
                                 | INSTRCASE

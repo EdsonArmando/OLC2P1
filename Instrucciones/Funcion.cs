@@ -28,6 +28,8 @@ namespace Proyecto1_Compi2.Instrucciones
 
         public Retornar Ejecutar(Entorno ent, String ambito, Sintactico AST)
         {
+            Simbolo sim = new Simbolo(Simbolo.EnumTipoDato.FUNCION, null,id,ambito,"");
+            ent.Insertar(id.ToLower(),sim);
             Funcion fun = this;
             Singleton.getInstance().putFuncion(fun, id.ToLower());
             return new Retornar();

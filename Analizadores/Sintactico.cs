@@ -37,8 +37,8 @@ namespace Proyecto1_Compi2.Analizadores
             else
             {
                 GraficarAST graficar = new GraficarAST(raiz);
-                //graficar.recorrerRaiz(raiz);
-                //graficar.generarArchivo();
+                graficar.recorrerRaiz(raiz);
+                graficar.generarArchivo();
                 Form1.salidaConsola.AppendText("Se analizo correctamente\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(3));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
@@ -72,8 +72,8 @@ namespace Proyecto1_Compi2.Analizadores
             else
             {
                 GraficarAST graficar = new GraficarAST(raiz);
-                //graficar.recorrerRaiz(raiz);
-                //graficar.generarArchivo();
+                graficar.recorrerRaiz(raiz);
+                graficar.generarArchivo();
                 Form1.salidaConsola.AppendText("Se analizo correctamente\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(3));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
@@ -265,6 +265,9 @@ namespace Proyecto1_Compi2.Analizadores
                     }
                 case "types_object":
                     Singleton.getInstance().insertType(new Type_Object(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(1).ToString().Split(' ')[0], Listainstrucciones(actual.ChildNodes.ElementAt(0).ChildNodes.ElementAt(4))));
+                    return null;
+                case "graficar_ts":
+                    instrucciones.AddLast(new GraficarTS());
                     return null;
                 case "procedure":
                     ParseTreeNode procedure = actual.ChildNodes.ElementAt(0);
