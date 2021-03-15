@@ -101,7 +101,7 @@ namespace Proyecto1_Compi2.Analizadores
             {
                 for (int i = 0; i < arbol.ParserMessages.Count(); i++)
                 {
-                    errores.AddLast(new Error("Lexico", "val", (arbol.ParserMessages.ElementAt(i).Location.Line + 1), arbol.ParserMessages.ElementAt(i).Location.Column));
+                    errores.AddLast(new Error("Error", arbol.ParserMessages.ElementAt(i).Message, (arbol.ParserMessages.ElementAt(i).Location.Line + 1), arbol.ParserMessages.ElementAt(i).Location.Column));
                     Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString() + " Fila: " + (arbol.ParserMessages.ElementAt(i).Location.Line + 1)
                         + " Columna: " + arbol.ParserMessages.ElementAt(i).Location.Column
                         + "\n");

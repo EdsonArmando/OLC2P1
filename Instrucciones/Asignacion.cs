@@ -58,6 +58,7 @@ namespace Proyecto1_Compi2.Instrucciones
                         }
                         else {
                             ent.setVariable(id, new Simbolo(sim.tipo, resultado.valor, id, sim.ambito, sim.referencia_const), ent); // Guardo la variable
+                            ent.recorrer(ent);
                         }                        
                     }                    
                 }

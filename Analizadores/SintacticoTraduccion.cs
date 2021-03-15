@@ -6,6 +6,7 @@ using Proyecto1_Compi2.Instrucciones;
 using Proyecto1_Compi2.Reportes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -14,10 +15,12 @@ namespace Proyecto1_Compi2.Analizadores
     class SintacticoTraduccion
     {
         private int fila = 0;
+        public static LinkedList<Error> errores = new LinkedList<Error>();
         private LinkedList<Type_Object> types = new LinkedList<Type_Object>();
         public void analizar(String entrada)
         {
             types.Clear();
+            errores.Clear();
             Singleton.getInstance().limpiarEntorno();
             Gramatica gramatica = new Gramatica();
             LanguageData lenguaje = new LanguageData(gramatica);
@@ -25,20 +28,23 @@ namespace Proyecto1_Compi2.Analizadores
             ParseTree arbol = parser.Parse(entrada);
             ParseTreeNode raiz = arbol.Root;
             if (raiz == null || arbol.ParserMessages.Count() > 0)
-            {
-                for (int i = 0; i < arbol.ParserMessages.Count(); i++)
+                if (raiz == null || arbol.ParserMessages.Count() > 0)
                 {
-                    Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString() + " Fila: " + (arbol.ParserMessages.ElementAt(i).Location.Line + 1)
-                        + " Columna: " + arbol.ParserMessages.ElementAt(i).Location.Column
-                        + "\n");
+                    for (int i = 0; i < arbol.ParserMessages.Count(); i++)
+                    {
+                        errores.AddLast(new Error("Error", arbol.ParserMessages.ElementAt(i).Message, (arbol.ParserMessages.ElementAt(i).Location.Line + 1), arbol.ParserMessages.ElementAt(i).Location.Column));
+                        Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString() + " Fila: " + (arbol.ParserMessages.ElementAt(i).Location.Line + 1)
+                            + " Columna: " + arbol.ParserMessages.ElementAt(i).Location.Column
+                            + "\n");
+                    }
+                    GraficarErrores();
+                    return;
                 }
-                return;
-            }
-            else
+                else
             {
                 GraficarAST graficar = new GraficarAST(raiz);
-                //graficar.recorrerRaiz(raiz);
-                //graficar.generarArchivo();
+                graficar.recorrerRaiz(raiz);
+                graficar.generarArchivo();
                 Form1.salidaConsola.AppendText("program traducido;\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(3));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
@@ -54,6 +60,7 @@ namespace Proyecto1_Compi2.Analizadores
         internal void traducir(string entrada)
         {
             types.Clear();
+            errores.Clear();
             Singleton.getInstance().limpiarEntorno();
             Gramatica gramatica = new Gramatica();
             LanguageData lenguaje = new LanguageData(gramatica);
@@ -64,17 +71,19 @@ namespace Proyecto1_Compi2.Analizadores
             {
                 for (int i = 0; i < arbol.ParserMessages.Count(); i++)
                 {
+                    errores.AddLast(new Error("Error", arbol.ParserMessages.ElementAt(i).Message, (arbol.ParserMessages.ElementAt(i).Location.Line + 1), arbol.ParserMessages.ElementAt(i).Location.Column));
                     Form1.salidaConsola.AppendText(arbol.ParserMessages.ElementAt(i).Level.ToString() + " Fila: " + (arbol.ParserMessages.ElementAt(i).Location.Line + 1)
                         + " Columna: " + arbol.ParserMessages.ElementAt(i).Location.Column
                         + "\n");
                 }
+                GraficarErrores();
                 return;
             }
             else
             {
                 GraficarAST graficar = new GraficarAST(raiz);
-                //graficar.recorrerRaiz(raiz);
-                //graficar.generarArchivo();
+                graficar.recorrerRaiz(raiz);
+                graficar.generarArchivo();
                 Form1.salidaConsola.AppendText("program traducido;\n");
                 LinkedList<Abstracto.Instruccion> AST = Listainstrucciones(raiz.ChildNodes.ElementAt(3));
                 Entornos.Entorno ent = new Entornos.Entorno(null);
@@ -87,7 +96,37 @@ namespace Proyecto1_Compi2.Analizadores
                 Form1.salidaConsola.AppendText(entradaTradducida.ToString());
             }
         }
+        private void GraficarErrores()
+        {
+            int conts = 1;
+            StreamWriter archivo = new StreamWriter("C:\\compiladores2\\TablaErrores_201701029.html");
+            archivo.Write("<html>");
+            archivo.Write("<head>");
+            archivo.Write("<style>"
+                    + "table{"
+                    + "  font-family: arial, sans-serif; border-collapse: collapse;    width: 100%;}"
+                    + "td, th{"
+                    + "border: 1px solid #dddddd;text-align: left;  padding: 8px;}"
+                    + "tr:nth-child(even){"
+                    + " background-color: #dddddd;}"
+                    + "</style>");
+            archivo.Write("</head>");
+            archivo.Write("<body>");
+            archivo.Write("<H1>Tabla de Errores</H1>");
+            archivo.Write("<br><br>");
+            archivo.Write("<table>");
+            archivo.Write("<tr><th>No</th><th>Nombre</th><th>Tipo</th><th>fila</th><th>columna</th></tr>");
+            foreach (Error err in errores)
+            {
+                archivo.Write("<tr><td>" + conts + "</td><td>" + err.valor + "</td><td>" + err.tipo + "</td><td>" + err.fila + "</td><td>" + err.columna + " </td></tr>");
+                conts++;
+            }
 
+            archivo.Write("</table>");
+            archivo.Write("</body>");
+            archivo.Write("</html>");
+            archivo.Close();
+        }
         private Expresion[,] Dimensiones(ParseTreeNode actual, Expresion[,] valores)
         {
             if (actual.ChildNodes.Count == 4)

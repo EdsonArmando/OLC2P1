@@ -60,8 +60,8 @@ namespace Proyecto1_Compi2.Entornos
         public void setVariable(string nombre, Simbolo valor,Entorno ent) {
             if (ent.tablaSimbolos.ContainsKey(nombre.ToLower()))
             {
-                ent.tablaSimbolos.Remove(nombre);
-                ent.tablaSimbolos.Add(nombre, valor);
+                ent.tablaSimbolos.Remove(nombre.ToLower()); ;
+                ent.tablaSimbolos.Add(nombre.ToLower(), valor);
                 return;
             }
             else if (ent.anterior != null)

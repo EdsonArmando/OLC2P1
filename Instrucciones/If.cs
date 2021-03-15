@@ -31,7 +31,7 @@ namespace Proyecto1_Compi2.Instrucciones
         }
         public Retornar Ejecutar(Entorno ent, string Ambito, Sintactico AST)
         {
-            bool condicionBooleana = (bool)condicion.obtenerValor(ent).valor;
+            bool condicionBooleana = Boolean.Parse(condicion.obtenerValor(ent).valor.ToString());
             if (condicionBooleana)
             {
                 foreach (Instruccion ins in listaInstrucciones)
