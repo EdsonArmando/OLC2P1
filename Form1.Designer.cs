@@ -51,7 +51,7 @@ namespace Proyecto1_Compi2
             this.richTextBox1.Location = new System.Drawing.Point(57, 12);
             this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(886, 502);
+            this.richTextBox1.Size = new System.Drawing.Size(886, 408);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             this.richTextBox1.SelectionChanged += new System.EventHandler(this.richTextBox1_SelectionChanged);
@@ -75,7 +75,7 @@ namespace Proyecto1_Compi2
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(951, 56);
+            this.label2.Location = new System.Drawing.Point(987, 52);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(162, 15);
@@ -84,22 +84,22 @@ namespace Proyecto1_Compi2
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1014, 95);
+            this.button1.Location = new System.Drawing.Point(1061, 70);
             this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(88, 27);
             this.button1.TabIndex = 4;
-            this.button1.Text = "Traducir";
+            this.button1.Text = "Ejecutar";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1014, 143);
+            this.button2.Location = new System.Drawing.Point(1062, 103);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(88, 27);
             this.button2.TabIndex = 5;
-            this.button2.Text = "Ejecutar";
+            this.button2.Text = "Traducir";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -110,7 +110,7 @@ namespace Proyecto1_Compi2
             this.LineNumberTextBox.Location = new System.Drawing.Point(14, 12);
             this.LineNumberTextBox.Name = "LineNumberTextBox";
             this.LineNumberTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.LineNumberTextBox.Size = new System.Drawing.Size(22, 502);
+            this.LineNumberTextBox.Size = new System.Drawing.Size(22, 408);
             this.LineNumberTextBox.TabIndex = 7;
             this.LineNumberTextBox.Text = "";
             // 
@@ -119,7 +119,7 @@ namespace Proyecto1_Compi2
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.ClientSize = new System.Drawing.Size(1115, 749);
+            this.ClientSize = new System.Drawing.Size(1162, 749);
             this.Controls.Add(this.LineNumberTextBox);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -187,7 +187,7 @@ namespace Proyecto1_Compi2
             LineNumberTextBox.Font = richTextBox1.Font;
             richTextBox1.Select();
             AddLineNumbers();
-            salidaConsola.Size = new System.Drawing.Size(916, 150);
+            salidaConsola.Size = new System.Drawing.Size(933, 260);
             salidaConsola.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
             salidaConsola.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             salidaConsola.ScrollToCaret();
@@ -202,7 +202,7 @@ namespace Proyecto1_Compi2
 
             // Creating and setting the 
             // properties of RichTextBox 
-            salidaConsola.Location = new System.Drawing.Point(12, 520);
+            salidaConsola.Location = new System.Drawing.Point(12, 450);
 
             salidaConsola.ForeColor = Color.White;
 

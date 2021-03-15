@@ -55,6 +55,10 @@ namespace Proyecto1_Compi2.Instrucciones
                     {
                         break;
                     }
+                    if (contenido.isReturn)
+                    {
+                        return contenido;
+                    }
                 }
                 if (descendente == false)
                 {
