@@ -104,6 +104,7 @@ namespace Proyecto1_Compi2.Expresiones
                 }
                 if (sim == null) {
                     Form1.salidaConsola.AppendText("No se encontro la variable\n");
+                    Sintactico.errores.AddLast(new Error("Semantico no existe variable", valor.ToString(), 1, 1));
                     return null;
                 } else if (sim.tipo == Simbolo.EnumTipoDato.CHAR) {
                     return new Literal(sim.tipo, sim.valor);

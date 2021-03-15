@@ -82,6 +82,7 @@ namespace Proyecto1_Compi2.Expresiones
             }
             else {
                 Form1.salidaConsola.AppendText("Ocurrio un error al guardar el array !!! \n");
+                Sintactico.errores.AddLast(new Error("Semantico Ocurrio un error al guardar el array", Nombre_id, 1, 1));
             }
             return new Retornar();
         }

@@ -1,4 +1,5 @@
-﻿using Proyecto1_Compi2.Instrucciones;
+﻿using Proyecto1_Compi2.Analizadores;
+using Proyecto1_Compi2.Instrucciones;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,6 +45,7 @@ namespace Proyecto1_Compi2.Entornos
                 return sim;
             }
             else {
+                Sintactico.errores.AddLast(new Error("Semantico no existe variable",id,1,1));
                 Form1.salidaConsola.AppendText("La variable '" + id + "' NO existe");
                 return null;
             }
